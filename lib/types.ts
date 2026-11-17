@@ -1,6 +1,6 @@
 export type Zone = "fire" | "creek" | "deck" | "shelter";
 export type Pose = "standing" | "walking" | "sitting";
-export type Motion = { x: number; z: number; yaw: number; pose: Pose; zone: Zone; seq: number; sentAt: number; userId: string; pitch?: number; inside?: boolean };
+export type Motion = { x: number; z: number; yaw: number; pose: Pose; zone: Zone; seq: number; sentAt: number; userId: string; pitch?: number; heading?: number; inside?: boolean };
 export type Member = { userId: string; seat: number; lastSeen: number };
 export type CampEvent = { id: string; userId: string; kind: "wave" | "marshmallow" | "skip"; value: number; createdAt: number };
 export type Fire = { lit: boolean; woodAt: number; startedAt: number };

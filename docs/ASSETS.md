@@ -1,18 +1,22 @@
-# 자산 출처와 교체 메모
+# v1.1.0 자산 기록
 
-이 버전은 외부 사진·모델·음원 파일을 다운로드하거나 포함하지 않습니다. 현장 지형을 재현한 것이 아닌 방태산의 숲·계곡에서 영감을 얻은 창작 공간입니다.
+외부 자산은 프로젝트에 보관하며 실행 중 외부 미디어 서버에서 가져오지 않습니다. CC0는 상업 이용·수정·재배포가 가능합니다. 출처를 아래에 기록했습니다.
 
-| 자산 | 파일/제작 방식 | 출처·사용 조건 | 공개 전 미술/소리 검수 |
-| --- | --- | --- | --- |
-| 나무, 능선, 바위, 화로, 의자, 텐트, 캠퍼 | `components/camp-scene.tsx`, Three.js 기본 geometry와 instancing | 이 프로젝트에서 작성한 절차형 모델, 별도 제3자 자산 라이선스 없음 | 현재 스타일은 단순화된 3D. 기획서의 촬영풍 품질에 도달하려면 PBR 재질·캠퍼 리깅·산림 모델로 교체/보강 필요 |
-| 지면·나무껍질·목재·텐트 재질 | 같은 파일의 `texture()` | 브라우저 Canvas로 직접 생성, 외부 텍스처 없음 | 촬영풍 PBR 텍스처로 개선 권장 |
-| 4구역 × 4시간대 스틸 | `public/scenes/*.svg`, `scripts/generate-stills.mjs` | 프로젝트에서 작성한 벡터 풍경. `node scripts/generate-stills.mjs`로 재생성 | 실제 장면 렌더와 완전히 같은 구도는 아님. 최종 3D 고해상도 렌더로 교체 권장 |
-| 계곡·바람·장작·비·풀벌레 | `lib/audio.ts` | Web Audio의 노이즈·필터·발진기로 직접 합성. 외부 음원/샘플 없음 | 합성 음향은 현장 녹음 수준의 ASMR이 아님. 한국 계곡·텐트 빗소리·풀벌레 현장 녹음으로 교체 권장. 새 자산의 제작자·링크·상업 이용·수정·재배포 조건을 이 표에 추가할 것 |
-| 물수제비 효과음 | 같은 파일의 `splash()` | 직접 합성, 마이크 권한/녹음 없음 | 실제 물 튀는 소리로 개선 권장 |
-| 아이콘 | `lucide-react` 1.74.0 | [Lucide](https://lucide.dev/license) / ISC. 패키지의 LICENSE 유지 | 교체 불필요 |
-| 글꼴 | OS 기본 한글 산세리프 | 기기 설치 글꼴 사용. 웹폰트 전송 없음 | 교체 불필요 |
-| 태양 계산 | `suncalc` 1.9.0 | [SunCalc](https://github.com/mourner/suncalc) / BSD-2-Clause, 패키지 LICENSE 유지 | KASI 공식 서울 2026-06-21/12-21 대조(2분 이내) 완료. 인제 지점의 공식 역서 대조는 추가 권장 |
-| 날씨 | 기상청 단기예보 조회서비스 | [기상청/공공데이터포털](https://www.data.go.kr/data/15084084/openapi.do), 공공누리 제1유형 등 포털 조건에 따라 출처표시. 장소 정보 UI에 출처·관측시각 표시 | 실제 키로 지연/실패·격자 관측 응답 추가 검수 |
-| 장소 모티브 | 참고 이름과 공식 링크만 사용 | [한국관광공사 고캠핑](https://www.gocamping.or.kr/bsite/camp/info/read.do?c_no=1245). 사진/로고/설명 원문 미포함 | 실제 캠핑장 운영·예약과 연결되지 않음 |
+| 자산 | 제작자·원문 | 조건·프로젝트 적용 |
+| --- | --- | --- |
+| 귀여운 리깅 아바타 | Kenney, [Mini Characters](https://kenney.nl/assets/mini-characters) | CC0. `public/models/camper-cute.glb`, `Textures/colormap.png`. 공식 다운로드가 HTTP 403이어서 [공개 미러](https://github.com/shorepine/kenney/tree/main/3d/mini-characters)에서 male-a 원본을 확보. 원본 walk/idle/sit 클립, 크기·좌석 자세·걷기 블렌딩 조정. |
+| 풀벌레 | Wolfgang_ / Ted Kerr, [Crickets Ambient Noise – loopable](https://opengameart.org/content/crickets-ambient-noise-loopable) | CC0, `public/audio/crickets.mp3`. 실제 녹음. |
+| 모닥불 | SKrafft, [Campfire Position 1](https://freesound.org/people/SKrafft/sounds/681366/) | CC0, `public/audio/fire.mp3`. Sony PCM-D100 현장 녹음의 공개 HQ 파일에서 60초 발췌·음량 정규화. |
+| 계곡·바람 | Thimras, [Park Ambiences](https://opengameart.org/content/park-ambiences) | CC0, `river.mp3`, `wind.mp3`, 각 40초 발췌·압축. 호주 애들레이드 공원 녹음이며 인제 현장 녹음은 아님. |
+| 비 | Ylmir, [Rain – loopable](https://opengameart.org/content/rain-loopable) | CC0, `rain.mp3`. 공개 MP3 팩에서 발췌·압축. |
+| 숲 바닥 PBR | eye-candy.xyz / Poly Haven, [forest_floor](https://polyhaven.com/a/forest_floor), [라이선스](https://polyhaven.com/license) | CC0. diffuse / OpenGL normal / roughness 1K를 WebP로 변환. `public/textures/forest-floor-*.webp`. |
+| 관측 별 41,411개·별자리 선 | Olaf Frohn, [d3-celestial](https://github.com/ofrohn/d3-celestial), Hipparcos/XHIP | BSD-3-Clause. `stars.8.json`을 좌표·등급·색지수만 남긴 `public/sky/catalog.json`으로 축약. [라이선스 원문](../public/licenses/d3-celestial.txt) 포함. 별 위치는 인제의 KST 시각에 맞춰 변환. 은하수 지도는 사용하지 않음. |
+| 달 표면 | NASA / Goddard SVS, [CGI Moon Kit](https://svs.gsfc.nasa.gov/4720/) | NASA 공개 자료, [이용 안내](https://svs.gsfc.nasa.gov/help/). `public/sky/moon.jpg`. 현재 위상을 적용하지만 달의 위치와 각크기는 관측 용이성을 위한 연출. |
+| 지형·텐트·의자·실내·불꽃·꼬치·물수제비 | 프로젝트 코드 | 절차적 메시/셰이더/Canvas 텍스처. `components/world-scene.tsx`. 불꽃은 직접 작성한 셰이더와 프레임별 형태 변화, 장작의 가벼운 맥동·불티. |
+| 물수제비 splash | 프로젝트 코드 | 짧은 Web Audio 잡음 효과. 주변 ASMR 5종은 실제 녹음 파일 사용. |
+| 구역별 스틸 16장 | 프로젝트 3D 장면 렌더 | `public/stills/*.webp`, `scripts/render-stills.mjs`로 재생성. WebGL 대체/첫 페인트에 사용. |
+| 글꼴·아이콘 | 시스템 글꼴, Lucide | 별도 웹폰트 다운로드 없음. Lucide ISC 라이선스는 npm 의존성에 포함. |
 
-Next.js, React, React Three Fiber, Three.js, Supabase JS는 MIT 라이선스이며 배포 번들의 라이선스 주석과 의존성 LICENSE를 유지합니다. 개별 자산이 필요한 경우 CC0 또는 직접 제작/계약 자산을 우선 사용하고, 조건 확인 전에는 교체 파일을 포함하지 마세요.
+모든 루프는 브라우저에서 1.2초 equal-power 크로스페이드합니다. 최초 `소리 켜기` 이전에는 AudioContext를 재생하지 않습니다. 음량과 저널·사용자 사진은 개인 브라우저에만 남습니다.
+
+보완 권장: 현재 텐트와 숲은 가벼운 실시간 절차적 모델입니다. 사진 수준의 상용 게임 그래픽에 해당하지 않습니다. 향후 미술 작업에서는 텐트 천의 주름, 지형·식생 LOD, 한국 계곡/풀벌레의 자체 현장 녹음을 우선 검수하세요. 새 자산을 추가할 때 원문과 사용 조건을 이 표에 남기세요.

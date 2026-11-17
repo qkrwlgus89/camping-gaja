@@ -1,29 +1,20 @@
 {
-  "environment": "macOS, headless installed Chrome, SwiftShader software WebGL, 360x800, DPR 2, application DPR cap 1.25, no mobile GPU",
+  "environment": "macOS, headless installed Chrome, SwiftShader software WebGL, 360x800, DPR 2, application DPR initial cap 1.05, adaptive floor 0.55, no mobile GPU",
   "browser": "157.0.8103.79",
   "network": "10 Mbps down / 5 Mbps up / 80 ms latency / cache disabled",
-  "sceneReadyMs": 871,
-  "threeReadyMs": 3835,
-  "fcpMs": 3308,
-  "transferredResourceBytes": 510597,
-  "externalModelTextureAudioBytes": 0,
-  "renderFps": 29.1,
-  "condition": "current KST night, neutral cloudy weather, fire off, walking right",
+  "sceneReadyMs": 454,
+  "threeReadyMs": 2016,
+  "fcpMs": 1968,
+  "transferredResourceBytes": 2828847,
+  "externalModelTextureAudioBytes": 2074106,
+  "renderFps": 29.2,
+  "pixelRatio": 0.55,
+  "condition": "current KST night, neutral cloudy weather, fire on, walking right",
   "resources": [
     {
-      "name": "/scenes/fire-night.svg",
-      "bytes": 25412,
-      "decoded": 71713
-    },
-    {
-      "name": "/_next/static/chunks/3-9l6260f7qo6.css",
-      "bytes": 6855,
-      "decoded": 24604
-    },
-    {
-      "name": "/_next/static/chunks/0wfurka9errm3.js",
-      "bytes": 7627,
-      "decoded": 21947
+      "name": "/stills/fire-night.webp",
+      "bytes": 77032,
+      "decoded": 76732
     },
     {
       "name": "/_next/static/chunks/turbopack-2u1d16houkiyo.js",
@@ -31,14 +22,14 @@
       "decoded": 9974
     },
     {
-      "name": "/_next/static/chunks/3qfy96eoyh-ek.js",
-      "bytes": 3815,
-      "decoded": 13994
+      "name": "/_next/static/chunks/1ekr7xdixvlt5.css",
+      "bytes": 8138,
+      "decoded": 32043
     },
     {
-      "name": "/_next/static/chunks/04c9_w2didbsh.js",
-      "bytes": 3306,
-      "decoded": 5567
+      "name": "/_next/static/chunks/0wfurka9errm3.js",
+      "bytes": 7627,
+      "decoded": 21947
     },
     {
       "name": "/_next/static/chunks/02to5fbmja2cb.js",
@@ -51,9 +42,19 @@
       "decoded": 229288
     },
     {
-      "name": "/_next/static/chunks/1ub9yw26_d5b5.js",
-      "bytes": 88262,
-      "decoded": 312914
+      "name": "/_next/static/chunks/3qfy96eoyh-ek.js",
+      "bytes": 3815,
+      "decoded": 13994
+    },
+    {
+      "name": "/_next/static/chunks/3rm_t_cq2nejc.js",
+      "bytes": 4116,
+      "decoded": 6931
+    },
+    {
+      "name": "/_next/static/chunks/3a7j7dg1jj92u.js",
+      "bytes": 90898,
+      "decoded": 322237
     },
     {
       "name": "/api/time",
@@ -66,14 +67,779 @@
       "decoded": 144
     },
     {
+      "name": "/_next/static/chunks/0afzz7l3k1583.js",
+      "bytes": 268709,
+      "decoded": 1008801
+    },
+    {
       "name": "/icon.svg",
       "bytes": 516,
       "decoded": 266
     },
     {
-      "name": "/_next/static/chunks/2x3mg2313gwc1.js",
-      "bytes": 248885,
-      "decoded": 943146
+      "name": "/models/camper-cute.glb",
+      "bytes": 36709,
+      "decoded": 246916
+    },
+    {
+      "name": "/sky/catalog.json",
+      "bytes": 461234,
+      "decoded": 1234411
+    },
+    {
+      "name": "/sky/constellations.lines.json",
+      "bytes": 8223,
+      "decoded": 27136
+    },
+    {
+      "name": "/sky/moon.jpg",
+      "bytes": 139368,
+      "decoded": 139068
+    },
+    {
+      "name": "/textures/forest-floor-rough.webp",
+      "bytes": 314918,
+      "decoded": 314618
+    },
+    {
+      "name": "/textures/forest-floor-diff.webp",
+      "bytes": 552624,
+      "decoded": 552324
+    },
+    {
+      "name": "/textures/forest-floor-nor_gl.webp",
+      "bytes": 552024,
+      "decoded": 551724
+    },
+    {
+      "name": "/models/Textures/colormap.png",
+      "bytes": 9006,
+      "decoded": 8706
+    },
+    {
+      "name": "/api/session",
+      "bytes": 430,
+      "decoded": 139
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1272,
+      "decoded": 2579
+    },
+    {
+      "name": "/api/rooms",
+      "bytes": 519,
+      "decoded": 322
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1291,
+      "decoded": 2612
+    },
+    {
+      "name": "/icon.svg",
+      "bytes": 516,
+      "decoded": 266
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1304,
+      "decoded": 2771
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1304,
+      "decoded": 2771
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1309,
+      "decoded": 2772
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1339,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1342,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1342,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1342,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1339,
+      "decoded": 2816
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1339,
+      "decoded": 2816
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1339,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1339,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1339,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1339,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1341,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1339,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1342,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1342,
+      "decoded": 2818
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1340,
+      "decoded": 2817
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1251,
+      "decoded": 2437
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1252,
+      "decoded": 2438
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1250,
+      "decoded": 2437
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1251,
+      "decoded": 2438
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1251,
+      "decoded": 2438
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1250,
+      "decoded": 2438
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1251,
+      "decoded": 2438
+    },
+    {
+      "name": "/api/rooms/5a8f4e8a-3438-4e89-be60-d761214dc369",
+      "bytes": 526,
+      "decoded": 335
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1251,
+      "decoded": 2438
+    },
+    {
+      "name": "/api/grounds",
+      "bytes": 1251,
+      "decoded": 2438
     }
   ]
 }

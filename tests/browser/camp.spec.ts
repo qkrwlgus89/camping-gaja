@@ -1,81 +1,62 @@
-import { test, expect, type Page } from '@playwright/test';
+import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
-async function closeSheet(page: Page) { await page.getByRole('button', { name: '닫기', exact: true }).click(); }
-async function labWeather(page: Page, name: string) { await page.getByRole('button', { name: '날씨·시간 실험실' }).click(); await page.getByRole('button', { name, exact: true }).click(); await closeSheet(page); }
-async function mapTravel(page: Page, name: string) { if (!(await page.getByRole('button', { name: `${name}로 이동`, exact: true }).isVisible())) await page.getByRole('button', { name: /CAMP MAP/ }).click(); await page.getByRole('button', { name: `${name}로 이동`, exact: true }).click(); }
-test('desktop 3D renders, keyboard movement, context loss and time fixtures', async ({ page }) => {
-  const errors: string[]=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('/'); await expect(page.locator('main')).toHaveAttribute('data-graphics','3d');
-  await expect(page.locator('main')).toHaveAttribute('data-audio','off');
-  await page.screenshot({path:'docs/desktop-night.png'});
-  await page.getByRole('button',{name:'날씨·시간 실험실'}).click();await page.getByRole('button',{name:'낮',exact:true}).click();await closeSheet(page);
-  await page.waitForTimeout(1800);await page.screenshot({path:'docs/desktop-day.png'});
-  await page.getByRole('button',{name:/일어나기/}).click(); await expect(page.locator('main')).toHaveAttribute('data-pose','standing');
-  await page.locator('.look-area').click({position:{x:550,y:380}}); await page.keyboard.down('w');await page.waitForTimeout(700);await page.keyboard.up('w');
-  expect(Number(await page.locator('main').getAttribute('data-z'))).toBeLessThan(4.5);
-  await page.keyboard.press('j');
-  await page.getByRole('button',{name:'날씨·시간 실험실'}).click();await page.getByRole('button',{name:'밤',exact:true}).click();
-  await expect(page.locator('.clock-time')).toHaveText('23:59');await page.getByRole('button',{name:'자정',exact:true}).click();await expect(page.locator('.clock-time')).toHaveText('00:00');
-  await page.getByRole('button',{name:'WebGL 중단 재현'}).click();await closeSheet(page);
-  await expect(page.locator('main')).toHaveAttribute('data-graphics','still'); await mapTravel(page,'계곡가');await expect(page.locator('main')).toHaveAttribute('data-zone','creek');
-  expect(errors).toEqual([]);
+const close=async(p:Page)=>p.getByRole('button',{name:'닫기',exact:true}).click();
+async function enter(p:Page,url='/',name='별빛 캠퍼'){await p.goto(url);await p.locator('.packing-bottom input').fill(name);await p.locator('.enter-camp').click();await expect(p.locator('main')).toHaveAttribute('data-entered','true');}
+async function lab(p:Page,label:string){await p.getByRole('button',{name:'설정',exact:true}).click();await p.getByRole('button',{name:'날씨·시간 실험실'}).click();await p.getByRole('button',{name:label,exact:true}).click();await close(p);}
+async function travel(p:Page,label:string){await p.getByRole('button',{name:'캠핑장 지도'}).click();await p.getByRole('button',{name:label,exact:true}).click();}
+
+test('packing, third person, continuous walking, vertical look, stars and moon, skewer axis and animated fire',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/');await expect(page.locator('.packing-gear button[aria-pressed=true]')).toHaveCount(3);
+ await page.locator('.packing-gear button').last().click();await expect(page.locator('.packing-gear button[aria-pressed=true]')).toHaveCount(3);
+ await page.screenshot({path:'docs/packing.png'});await page.locator('.enter-camp').click();await expect(page.locator('main')).toHaveAttribute('data-graphics','3d');await expect(page.locator('main')).toHaveAttribute('data-view','third-person');
+ await expect(page.locator('main')).toHaveAttribute('data-audio','off');await lab(page,'밤');await page.waitForTimeout(1500);await page.screenshot({path:'docs/desktop-night.png'});
+ await page.getByRole('button',{name:'일어나기',exact:true}).click();await page.locator('.view-control').click({position:{x:400,y:310}});await page.keyboard.down('w');await page.waitForTimeout(1400);await page.keyboard.up('w');
+ await expect.poll(async()=>Number(await page.locator('main').getAttribute('data-z'))).toBeLessThan(8.5);
+ await page.keyboard.down('s');await page.waitForTimeout(800);await page.keyboard.up('s');await expect.poll(async()=>Math.abs(Number(await page.locator('main').getAttribute('data-heading')))).toBeGreaterThan(2.8);
+ await page.mouse.move(500,400);await page.mouse.down();await page.mouse.move(500,170,{steps:8});await page.mouse.up();await expect.poll(async()=>Number(await page.locator('main').getAttribute('data-pitch'))).toBeGreaterThan(.6);
+ await page.getByRole('button',{name:'별자리 관측'}).click();await page.getByRole('button',{name:/카시오페이아/}).click();await expect(page.getByRole('checkbox',{name:'별자리 연결선'})).toBeChecked();await page.getByRole('button',{name:'달 바라보기'}).click();await page.waitForTimeout(1200);await page.screenshot({path:'docs/stars-moon.png'});await page.getByRole('button',{name:'별 관측 닫기'}).click();
+ await page.getByRole('button',{name:'설정',exact:true}).click();await page.getByText('움직임 줄이기',{exact:true}).getByRole('checkbox').check();await close(page);
+ await page.getByRole('button',{name:'마시멜로',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);await page.waitForTimeout(1200);await page.screenshot({path:'docs/marshmallow.png'});
+ const fireClip={x:630,y:435,width:150,height:160};const firstFire=await page.screenshot({clip:fireClip});await page.waitForTimeout(650);expect(firstFire.equals(await page.screenshot({clip:fireClip}))).toBe(false);const before=await page.locator('canvas').screenshot();await page.getByRole('button',{name:'꼬치 돌리기',exact:true}).click();await page.waitForTimeout(700);const after=await page.locator('canvas').screenshot();expect(before.equals(after)).toBe(false);await expect(page.getByLabel('화로에서 마시멜로')).toBeVisible();await page.screenshot({path:'docs/marshmallow-turned.png'});await page.getByRole('button',{name:'체험 그만하기'}).click();
+ await page.getByRole('button',{name:'가방 열기'}).click();await page.getByRole('button',{name:/랜턴/}).click();await expect(page.locator('main')).toHaveAttribute('data-placement','lantern');await page.mouse.move(870,665);await page.waitForTimeout(350);await page.screenshot({path:'docs/gear-preview.png'});await page.getByRole('button',{name:'여기에 놓기',exact:true}).click();await expect(page.locator('main')).toHaveAttribute('data-placement','none');await expect(page.locator('main')).toHaveAttribute('data-placed','1');await page.screenshot({path:'docs/gear-placed.png'});
+ expect(errors).toEqual([]);
 });
-test('two independent desktop and mobile sessions share invites, motion, fire, weather and reconnect', async ({ browser }) => {
-  const ca=await browser.newContext({viewport:{width:1440,height:900}}), cb=await browser.newContext({viewport:{width:360,height:800},isMobile:true,hasTouch:true,deviceScaleFactor:2});
-  const a=await ca.newPage(),b=await cb.newPage();await a.goto('/?view=still');
-  await a.getByRole('button',{name:'불 피우기',exact:true}).click();await expect(a.locator('main')).toHaveAttribute('data-fire','lit');
-  await a.getByRole('button',{name:'친구 초대',exact:true}).click();
-  const link=a.getByRole('textbox',{name:'친구 초대 링크'});await expect(link).toBeVisible();const url=await link.inputValue();expect(url).toContain('#invite=');
-  await closeSheet(a);await b.goto(url+'&unused=1');await b.getByRole('button',{name:'캠프 들어가기',exact:true}).click();
-  await expect(b.locator('main')).toHaveAttribute('data-connection','connected');await expect(a.getByText('친구와 함께 · 2 / 2')).toBeVisible();
-  await expect(b.locator('main')).toHaveAttribute('data-fire','lit');
-  await a.getByRole('button',{name:/일어나기/}).click();await a.locator('.look-area').click({position:{x:600,y:350}});await a.keyboard.down('d');
-  await expect(b.locator('main')).toHaveAttribute('data-friend-pose','walking');await a.keyboard.up('d');await expect(b.locator('main')).toHaveAttribute('data-friend-pose','standing');
-  await a.getByRole('button',{name:/앉기/}).click();await expect(b.locator('main')).toHaveAttribute('data-friend-pose','sitting');
-  await a.getByRole('button',{name:'손 인사',exact:true}).click();await expect(b.getByRole('status')).toContainText('손 인사');
-  await b.getByRole('button',{name:/일어나기/}).click();const joystick=b.getByRole('group',{name:'가상 조이스틱'});const box=(await joystick.boundingBox())!;
-  const cdp=await cb.newCDPSession(b);const x=box.x+box.width/2,y=box.y+box.height/2;
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-28,id:1}]});await b.waitForTimeout(650);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-  expect(Number(await b.locator('main').getAttribute('data-z'))).toBeLessThan(2.9);
-  const before=Number(await a.locator('main').getAttribute('data-version'));await b.getByRole('button',{name:'장작 넣기',exact:true}).click();await expect.poll(async()=>Number(await a.locator('main').getAttribute('data-version'))).toBeGreaterThan(before);
-  for(const [name,kind]of [['비','rain'],['진눈깨비','sleet'],['눈','snow']]){await labWeather(a,name);await expect(b.locator('main')).toHaveAttribute('data-weather',kind);expect(await a.locator('main').getAttribute('data-weather-version')).toBe(await b.locator('main').getAttribute('data-weather-version'));}
-  await labWeather(a,'비');await expect(b.locator('main')).toHaveAttribute('data-weather','rain');
-  await mapTravel(a,'계곡가');await mapTravel(b,'계곡가');
-  await a.getByRole('button',{name:'물수제비',exact:true}).click();const throwStone=a.getByRole('button',{name:'꾹 눌러 돌 던지기',exact:true});await throwStone.focus();await a.keyboard.down('Space');await a.waitForTimeout(900);await a.keyboard.up('Space');await expect(b.locator('main')).toHaveAttribute('data-last-event','skip');await expect(b.getByLabel('물수제비 물결')).toBeVisible();await closeSheet(a);
-  await labWeather(a,'눈');await expect(b.locator('main')).toHaveAttribute('data-weather','snow');
-  await b.getByRole('button',{name:'소리 켜기',exact:true}).first().click();await expect(b.locator('main')).toHaveAttribute('data-audio','on');await expect(a.locator('main')).toHaveAttribute('data-audio','off');
-  await b.reload();await expect(b.locator('main')).toHaveAttribute('data-connection','connected');await expect(b.locator('main')).toHaveAttribute('data-weather','snow');
-  await cb.setOffline(true);await expect(b.locator('main')).toHaveAttribute('data-connection','reconnecting');
-  await a.getByRole('button',{name:'설정',exact:true}).click();await a.getByRole('button',{name:'불 끄기',exact:true}).click();await closeSheet(a);
-  await cb.setOffline(false);await expect(b.locator('main')).toHaveAttribute('data-connection','connected');await expect(b.locator('main')).toHaveAttribute('data-fire','off');
-  const cc=await browser.newContext();const c=await cc.newPage();await c.goto(url);await c.getByRole('button',{name:'캠프 들어가기',exact:true}).click();await expect(c.getByRole('dialog').getByRole('alert')).toContainText('모두 찼어요');
-  await b.screenshot({path:'docs/mobile-together.png'});
-  await b.getByRole('button',{name:'친구 초대',exact:true}).click();await b.getByRole('button',{name:'친구 캠프 나가기',exact:true}).click();await expect(a.locator('main')).toHaveAttribute('data-friend-pose','none');
-  await c.getByRole('button',{name:'캠프 들어가기',exact:true}).click();await expect(c.getByRole('dialog').getByRole('alert')).toContainText('이미 사용');
-  await ca.close();await cb.close();await cc.close();
+
+test('independent sessions share public camp, four-seat invites, motion, pose, greeting, fire, weather and reconnect',async({browser,baseURL})=>{
+ test.setTimeout(100000);const ca=await browser.newContext({viewport:{width:900,height:650}}),cb=await browser.newContext({viewport:{width:360,height:800},isMobile:true,hasTouch:true});const a=await ca.newPage(),b=await cb.newPage();
+ await enter(a,baseURL!,'지현');await expect(a.locator('main')).toHaveAttribute('data-connection','connected');await a.getByRole('button',{name:'친구 초대',exact:true}).click();const link=await a.getByRole('textbox',{name:'친구 초대 링크'}).inputValue();await close(a);
+ const invited=new URL(link);invited.searchParams.set('view','still');await enter(b,invited.toString(),'숲친구');await expect(a.locator('main')).toHaveAttribute('data-members','2');await expect(b.locator('main')).toHaveAttribute('data-members','2');
+ await a.bringToFront();await a.getByRole('button',{name:'일어나기',exact:true}).click();await a.locator('.view-control').click({position:{x:430,y:300}});await a.keyboard.down('d');await expect(b.locator('main')).toHaveAttribute('data-peer-pose','walking');await a.keyboard.up('d');await expect(b.locator('main')).toHaveAttribute('data-peer-pose','standing');
+ await a.getByRole('button',{name:'앉기',exact:true}).click();await expect(b.locator('main')).toHaveAttribute('data-peer-pose','sitting');await a.getByRole('button',{name:'손 인사',exact:true}).click();await expect(b.locator('main')).toHaveAttribute('data-last-event','wave');
+ await a.getByRole('button',{name:'설정',exact:true}).click();await a.getByRole('button',{name:'공동 화로 불 끄기'}).click();await close(a);await expect(b.locator('main')).toHaveAttribute('data-fire','off');await b.getByRole('button',{name:'불 피우기',exact:true}).click();await expect(a.locator('main')).toHaveAttribute('data-fire','lit');
+ for(const[name,kind]of[['비','rain'],['진눈깨비','sleet'],['눈','snow']]){await lab(a,name);await expect(b.locator('main')).toHaveAttribute('data-weather',kind);expect(await a.locator('main').getAttribute('data-weather-version')).toBe(await b.locator('main').getAttribute('data-weather-version'));}
+ await travel(a,'계곡으로');await a.getByRole('button',{name:'물수제비',exact:true}).click();await expect(a.getByRole('dialog')).toHaveCount(0);const stone=a.getByRole('button',{name:'꾹 눌러 돌 던지기'});await stone.focus();await a.keyboard.down('Space');await a.waitForTimeout(900);await a.keyboard.up('Space');await expect(b.locator('main')).toHaveAttribute('data-last-event','skip');await a.getByRole('button',{name:'체험 그만하기'}).click();
+ await a.getByRole('button',{name:'캠퍼들과 대화'}).click();await a.getByRole('textbox',{name:'캠퍼들에게 할 말'}).fill('같이 별을 봐요');await a.getByRole('button',{name:'대화 보내기'}).click();await a.getByRole('button',{name:'대화 닫기'}).click();await b.getByRole('button',{name:'캠퍼들과 대화'}).click();await expect(b.getByText('같이 별을 봐요',{exact:true})).toBeVisible();await b.getByRole('button',{name:'대화 닫기'}).click();
+ const room=await a.locator('main').getAttribute('data-room');const host=await a.evaluate(()=>JSON.parse(localStorage.getItem('camp-local-guest')!));const headers={Origin:baseURL!,Authorization:`Bearer ${host.token}`};
+ for(let i=0;i<2;i++){const invite=await(await ca.request.post(`/api/rooms/${room}`,{headers,data:{action:'invite'}})).json();const guest=await(await ca.request.post('/api/session',{headers:{Origin:baseURL!}})).json();const res=await ca.request.post(`/api/rooms/${room}`,{headers:{...headers,Authorization:`Bearer ${guest.token}`},data:{action:'join',token:invite.inviteToken}});expect(res.ok()).toBe(true);}
+ await expect(a.locator('main')).toHaveAttribute('data-members','4');const fifth=await(await ca.request.post('/api/session',{headers:{Origin:baseURL!}})).json();const full=await ca.request.post(`/api/rooms/${room}`,{headers:{...headers,Authorization:`Bearer ${fifth.token}`},data:{action:'join',token:new URL(link).hash.split('=')[1]}});expect(full.status()).toBe(409);
+ await b.reload();await expect(b.locator('main')).toHaveAttribute('data-entered','true');await expect(b.locator('main')).toHaveAttribute('data-room',room!);await expect(b.locator('main')).toHaveAttribute('data-members','4');await expect(b.locator('main')).toHaveAttribute('data-weather','snow');
+ await cb.setOffline(true);await expect(b.locator('main')).toHaveAttribute('data-connection','reconnecting');await cb.setOffline(false);await expect(b.locator('main')).toHaveAttribute('data-connection','connected');await b.screenshot({path:'docs/mobile-together.png'});await ca.close();await cb.close();
 });
-test('mobile portrait and landscape have no overflow, joystick and 44px main actions', async ({ browser }) => {
-  const ctx=await browser.newContext({viewport:{width:360,height:800},isMobile:true,hasTouch:true});const page=await ctx.newPage();await page.goto('/');await expect(page.locator('main')).toHaveAttribute('data-graphics','3d');
-  await page.screenshot({path:'docs/mobile-portrait.png'});
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const boxes=await page.locator('.action-dock button').evaluateAll(els=>els.map(el=>{const r=el.getBoundingClientRect();return {width:r.width,height:r.height,right:r.right,bottom:r.bottom}}));
-  for(const r of boxes){expect(r.width).toBeGreaterThanOrEqual(44);expect(r.height).toBeGreaterThanOrEqual(44);expect(r.right).toBeLessThanOrEqual(360);expect(r.bottom).toBeLessThanOrEqual(800);}
-  await page.setViewportSize({width:800,height:360});await page.screenshot({path:'docs/mobile-landscape.png'});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await ctx.close();
+
+test('mobile portrait/landscape touch joystick, no overflow, large actions, tent contents and local journal',async({browser,baseURL})=>{
+ test.setTimeout(90000);const ctx=await browser.newContext({viewport:{width:360,height:800},isMobile:true,hasTouch:true,deviceScaleFactor:2}),p=await ctx.newPage();const errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));await enter(p,baseURL!);await expect(p.locator('main')).toHaveAttribute('data-graphics','3d');await p.waitForTimeout(1000);await p.screenshot({path:'docs/mobile-portrait.png'});
+ expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);for(const box of await p.locator('.field-dock button').evaluateAll(els=>els.map(el=>{const r=el.getBoundingClientRect();return{w:r.width,h:r.height}}))){expect(box.w).toBeGreaterThanOrEqual(44);expect(box.h).toBeGreaterThanOrEqual(44);}
+ await p.getByRole('button',{name:'일어나기',exact:true}).click();const box=(await p.getByRole('group',{name:'가상 조이스틱'}).boundingBox())!,x=box.x+box.width/2,y=box.y+box.height/2,cdp=await ctx.newCDPSession(p);
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-28,id:1}]});await p.waitForTimeout(1300);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await expect.poll(async()=>Number(await p.locator('main').getAttribute('data-z'))).toBeLessThan(8.5);
+ await p.getByRole('button',{name:/내 텐트/}).click();await expect(p.locator('main')).toHaveAttribute('data-inside','true');await p.getByRole('button',{name:'차 우리기'}).click();await expect(p.getByRole('button',{name:'차 한 잔 더'})).toBeVisible();await p.getByRole('button',{name:'침낭에 눕기'}).click();await expect(p.getByRole('button',{name:'일어나기',exact:true})).toBeVisible();await p.getByRole('button',{name:'오늘 한 줄'}).click();await p.locator('.journal-input').fill('따뜻한 밤');await close(p);expect(await p.evaluate(()=>localStorage.getItem('camp-journal'))).toBe('따뜻한 밤');await p.screenshot({path:'docs/tent-interior.png'});await p.getByRole('button',{name:'밖으로',exact:true}).click();
+ await p.setViewportSize({width:800,height:360});await p.screenshot({path:'docs/mobile-landscape.png'});expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(errors).toEqual([]);await ctx.close();
 });
-test('activities, client-only photo composition, downloadable PNG and sound settings', async ({ page }) => {
-  await page.goto('/?view=still');await page.getByRole('button',{name:'불 피우기',exact:true}).click();await page.getByRole('button',{name:'마시멜로 굽기',exact:true}).click();
-  await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'꼬치 돌리기',exact:true}).click();await page.getByRole('button',{name:'꺼내기',exact:true}).click();await page.getByRole('button',{name:'친구에게 보여주기',exact:true}).click();await closeSheet(page);
-  await mapTravel(page,'계곡가');await page.getByRole('button',{name:'물수제비',exact:true}).click();const stone=page.getByRole('button',{name:'꾹 눌러 돌 던지기',exact:true});await stone.focus();await page.keyboard.down('Space');await page.waitForTimeout(900);await page.keyboard.up('Space');await expect(page.locator('.result')).toContainText(/통|퐁당/);await closeSheet(page);
-  await mapTravel(page,'전망 데크');await page.getByRole('button',{name:'캠프 엽서',exact:true}).click();await expect(page.getByRole('button',{name:'PNG 저장',exact:true})).toBeEnabled();
-  let downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'PNG 저장',exact:true}).click();let download=await downloadPromise;await download.saveAs('test-results/postcard-no-photo.png');expect(fs.statSync('test-results/postcard-no-photo.png').size).toBeGreaterThan(10000);
-  const uploadRequests:string[]=[];page.on('request',r=>{if(r.method()==='POST')uploadRequests.push(r.url())});
-  await page.locator('input[type=file]').setInputFiles({name:'test-photo.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==','base64')});
-  await expect(page.getByRole('button',{name:'사진 바꾸기',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'PNG 저장',exact:true})).toBeEnabled();downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'PNG 저장',exact:true}).click();download=await downloadPromise;await download.saveAs('test-results/postcard-photo.png');expect(uploadRequests).toEqual([]);
-  await closeSheet(page);await page.getByRole('button',{name:'소리 켜기',exact:true}).first().click();await expect(page.locator('main')).toHaveAttribute('data-audio','on');
-  await page.getByRole('button',{name:'설정',exact:true}).click();await page.getByRole('slider',{name:'전체 음량'}).fill('0.3');await closeSheet(page);await page.reload();await expect(page.locator('main')).toHaveAttribute('data-audio','off');await page.getByRole('button',{name:'설정',exact:true}).click();await expect(page.getByRole('slider',{name:'전체 음량'})).toHaveValue('0.3');
+
+test('browser-only photo PNG and real audio require first gesture, personal volume persists',async({page})=>{
+ await enter(page,'/?view=still');await page.getByRole('button',{name:'캠프 엽서'}).click();await expect(page.getByRole('button',{name:'PNG 저장',exact:true})).toBeEnabled();let download=page.waitForEvent('download');await page.getByRole('button',{name:'PNG 저장',exact:true}).click();await(await download).saveAs('test-results/postcard-no-photo.png');expect(fs.statSync('test-results/postcard-no-photo.png').size).toBeGreaterThan(10000);
+ const uploaded:string[]=[];page.on('request',r=>{if(r.method()==='POST'&&r.postDataBuffer()?.includes(Buffer.from('test-photo')))uploaded.push(r.url());});
+ await page.locator('input[type=file]').setInputFiles({name:'test-photo.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==','base64')});await expect(page.getByRole('button',{name:'사진 바꾸기'})).toBeVisible();await expect(page.getByRole('button',{name:'PNG 저장'})).toBeEnabled();download=page.waitForEvent('download');await page.getByRole('button',{name:'PNG 저장'}).click();await(await download).saveAs('test-results/postcard-photo.png');expect(uploaded).toEqual([]);await close(page);
+ await page.getByRole('button',{name:'소리 켜기',exact:true}).first().click();await expect(page.locator('main')).toHaveAttribute('data-audio','on');await page.getByRole('button',{name:'설정',exact:true}).click();await page.getByRole('slider',{name:'전체 음량'}).fill('0.3');await close(page);await page.reload();await expect(page.locator('main')).toHaveAttribute('data-entered','true');await expect(page.locator('main')).toHaveAttribute('data-audio','off');await page.getByRole('button',{name:'설정',exact:true}).click();await expect(page.getByRole('slider',{name:'전체 음량'})).toHaveValue('0.3');
 });
-test('weather stale and failure states keep solo usable; time request can fail', async ({ page }) => {
-  await page.route('**/api/time',r=>r.abort());await page.route('**/api/weather',r=>r.abort());await page.goto('/?view=still');
-  for(const name of ['2시간 경과','API 실패']){await labWeather(page,name);await expect(page.getByText('날씨 정보 갱신 중',{exact:true})).toBeVisible();await page.getByRole('button',{name:'불 피우기',exact:true}).click();await expect(page.locator('main')).toHaveAttribute('data-fire','lit');await page.getByRole('button',{name:'설정',exact:true}).click();await page.getByRole('button',{name:'불 끄기',exact:true}).click();await closeSheet(page);}
+
+test('weather missing, stale and WebGL failure preserve still navigation',async({page})=>{
+ await page.route('**/api/time',r=>r.abort());await page.route('**/api/weather',r=>r.abort());await enter(page,'/?view=still');for(const label of['2시간 경과','API 실패']){await lab(page,label);await expect(page.locator('.camp-coordinate')).toContainText('날씨 갱신 중');}
+ await lab(page,'WebGL 중단 재현');await expect(page.locator('main')).toHaveAttribute('data-graphics','still');await page.getByRole('navigation',{name:'구역 이동'}).getByRole('button',{name:'계곡가',exact:true}).click();await expect(page.locator('main')).toHaveAttribute('data-zone','creek');await page.getByRole('button',{name:'물수제비',exact:true}).click();await expect(page.getByLabel('계곡에서 물수제비')).toBeVisible();
 });

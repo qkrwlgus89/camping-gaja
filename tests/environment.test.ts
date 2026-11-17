@@ -56,7 +56,7 @@ test('untrusted movement is bounded, sequenced and zone checked', () => {
   const m={...INITIAL_MOTION,userId:'a',seq:1,sentAt:1}; assert.ok(validMotion(m));
   assert.ok(!validMotion({...m,x:Infinity})); assert.ok(!validMotion({...m,z:-9}));
   assert.ok(!validMotion({...m,zone:'creek'})); assert.ok(!validMotion({...m,seq:-1}));
-  assert.equal(zoneAt(5,-5),'creek'); assert.ok(!walkable(0,1.5)); assert.ok(!walkable(-5,0)); assert.ok(!walkable(0,-8));
+  assert.equal(zoneAt(5,-15),'creek'); assert.ok(!walkable(0,1.5)); assert.ok(walkable(-5,0)); assert.ok(!walkable(0,-20));
 });
 test('shared fire uses server epoch and decays identically', () => {
   assert.equal(fireIntensity(false,0,200),0); assert.equal(fireIntensity(true,1000,1000),1.25);

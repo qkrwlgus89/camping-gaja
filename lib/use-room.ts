@@ -45,7 +45,7 @@ export function useRoom(onEvent: (e: CampEvent) => void) {
     const reply = await res.json();
     if (!res.ok) {
       if (reply.error === "AUTH_REQUIRED" && who.mode === "local") localStorage.removeItem("camp-local-guest");
-      if (["SEAT_EXPIRED", "ROOM_EXPIRED", "AUTH_REQUIRED"].includes(reply.error) && active.current) setStatus("expired");
+      if (["SEAT_EXPIRED", "ROOM_EXPIRED", "AUTH_REQUIRED"].includes(reply.error) && active.current) { active.current=null; setRoom(null); setStatus("expired"); localStorage.removeItem("camp-room"); setInviteUrl(""); }
       throw new Error(errorMessages[reply.error] ?? "연결을 확인해 주세요. 잠시 후 다시 시도할 수 있어요.");
     }
     return reply as Reply;

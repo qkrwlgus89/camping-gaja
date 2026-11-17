@@ -25,7 +25,7 @@ export function localCommand(actor: string, action: string, id: string | null, p
   state.limits.set(bucket, limit);
   for (const [key, room] of state.rooms) if (now - room.touchedAt > 30 * 60000) state.rooms.delete(key);
   if (action === "create") {
-    const room: LocalRoom = { id: randomUUID(), version: 1, channelEpoch: 1, tentIndex: [...state.rooms.values()].reduce((n, r) => Math.max(n,r.tentIndex+1),0), fire: { lit: payload.lit === true, woodAt: Number(payload.woodAt ?? now), startedAt: now }, members: [{ userId: actor, seat: 0, lastSeen: now }], events: [], invites: new Map(), requests: new Map(), touchedAt: now, motions: new Map() };
+    const room: LocalRoom = { id: randomUUID(), version: 1, channelEpoch: 1, tentIndex: Array.from({length:1024},(_,i)=>i).find(i=>![...state.rooms.values()].some(r=>r.tentIndex===i&&r.members.some(m=>now-m.lastSeen<90000)))??0, fire: { lit: payload.lit === true, woodAt: Number(payload.woodAt ?? now), startedAt: now }, members: [{ userId: actor, seat: 0, lastSeen: now }], events: [], invites: new Map(), requests: new Map(), touchedAt: now, motions: new Map() };
     state.rooms.set(room.id, room);
     return view(room);
   }

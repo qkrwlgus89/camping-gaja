@@ -1,0 +1,33 @@
+{
+  "release": "1.1.0",
+  "dateKST": "2026-11-18",
+  "environment": "macOS, installed Chrome 157, headless SwiftShader; Next production server on localhost:3001; local demo adapter",
+  "passed": 5,
+  "tests": [
+    {
+      "name": "packing, third person, continuous walking, vertical look, stars and moon, skewer axis and animated fire",
+      "status": "passed",
+      "durationMs": 29749
+    },
+    {
+      "name": "independent sessions share public camp, four-seat invites, motion, pose, greeting, fire, weather and reconnect",
+      "status": "passed",
+      "durationMs": 21108
+    },
+    {
+      "name": "mobile portrait/landscape touch joystick, no overflow, large actions, tent contents and local journal",
+      "status": "passed",
+      "durationMs": 15054
+    },
+    {
+      "name": "browser-only photo PNG and real audio require first gesture, personal volume persists",
+      "status": "passed",
+      "durationMs": 5552
+    },
+    {
+      "name": "weather missing, stale and WebGL failure preserve still navigation",
+      "status": "passed",
+      "durationMs": 2919
+    }
+  ]
+}

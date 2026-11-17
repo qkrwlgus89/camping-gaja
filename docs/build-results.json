@@ -1,0 +1,21 @@
+{
+  "release": "1.1.0",
+  "checkedAt": "2026-11-17T15:31:32.600Z",
+  "node": "v24.14.1",
+  "next": "16.4.6",
+  "command": "NEXT_PUBLIC_ENABLE_SCENE_LAB=true npm run build",
+  "exitCode": 0,
+  "typecheck": "passed",
+  "routes": [
+    "/",
+    "/_not-found",
+    "/api/grounds",
+    "/api/rooms",
+    "/api/rooms/[id]",
+    "/api/session",
+    "/api/time",
+    "/api/weather",
+    "/icon.svg"
+  ],
+  "note": "Local production build. No Vercel deployment performed."
+}

@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { localCommand } from '../lib/server/local';
 const hash='b'.repeat(64);
-test('one-time two-seat invite, retry-safe fire, heartbeat and rejoin bounds', () => {
+test('one-time four-seat invite, retry-safe fire, heartbeat and rejoin bounds', () => {
   const a=randomUUID(),b=randomUUID(),c=randomUUID(),time=1000000;
   const r=localCommand(a,'create',null,{lit:true},time);
   localCommand(a,'invite',r.id,{tokenHash:hash},time);
   const joined=localCommand(b,'join',r.id,{tokenHash:hash},time+1); assert.equal(joined.members.length,2); assert.ok(joined.fire.lit);
-  assert.throws(()=>localCommand(c,'join',r.id,{tokenHash:hash},time+1),/ROOM_FULL/);
+  assert.throws(()=>localCommand(c,'join',r.id,{tokenHash:hash},time+1),/INVITE_EXPIRED/);
   const requestId=randomUUID(); const fire=localCommand(b,'fire',r.id,{kind:'add',requestId},time+2);
   assert.equal(localCommand(b,'fire',r.id,{kind:'add',requestId},time+3).version,fire.version);
   assert.equal(localCommand(b,'heartbeat',r.id,{},time+89000).members.length,2);

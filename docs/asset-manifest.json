@@ -1,0 +1,51 @@
+{
+  "release": "1.1.0",
+  "sources": "ASSETS.md",
+  "files": [
+    {
+      "path": "public/models/camper-cute.glb",
+      "sha256": "77572792bfe2773b715b8cd8e18644b52b3e1f155fe10450254b50f9c364382a",
+      "bytes": 246916
+    },
+    {
+      "path": "public/models/Textures/colormap.png",
+      "sha256": "0d4947d34ff32acf4a359c7f22ca784e057e7e72f622170a9a77b6fc88fdb70e",
+      "bytes": 8706
+    },
+    {
+      "path": "public/audio/crickets.mp3",
+      "sha256": "5b5bd1f744087888c5623543c3ff80be9c2ce106093993e7c8a8492b0280b2c0",
+      "bytes": 184393
+    },
+    {
+      "path": "public/audio/fire.mp3",
+      "sha256": "dec373f495074eabb477358bedc3e36d131f1779ba91fcf6520c584afd25bbc5",
+      "bytes": 1201004
+    },
+    {
+      "path": "public/audio/river.mp3",
+      "sha256": "224fb71342f829cc76bcb48cf775873456f6ce88adf2726618164356cee8583e",
+      "bytes": 641008
+    },
+    {
+      "path": "public/audio/wind.mp3",
+      "sha256": "a0fd602befb2193e7ca2820e92aab1ea1e61fb1a383c8f1f49112bc3122a7dec",
+      "bytes": 641008
+    },
+    {
+      "path": "public/audio/rain.mp3",
+      "sha256": "f3a5e35c60051a0f05c66fc05299d7b3aaf1ca8c54c0ec62f6e3e4452524fea5",
+      "bytes": 433048
+    },
+    {
+      "path": "public/sky/catalog.json",
+      "sha256": "c1d33c70eb9e44197acb4b6f0bc587fe6a9150e971f2445e90c4b99d618eff17",
+      "bytes": 1234411
+    },
+    {
+      "path": "public/sky/moon.jpg",
+      "sha256": "b246064f217f8d479df78c49c7c8595a8f5fbda008a72fd539978d2e121e0109",
+      "bytes": 139068
+    }
+  ]
+}
