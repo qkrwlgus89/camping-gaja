@@ -1,0 +1,28 @@
+{
+  "passed": 23,
+  "checks": [
+    "both migrations",
+    "concurrent single-use join",
+    "one-time invite",
+    "idempotent private fire",
+    "room RLS",
+    "write denial",
+    "token privacy",
+    "service-only RPC",
+    "private Broadcast RLS",
+    "invite expiry",
+    "heartbeat",
+    "90s seat expiry",
+    "weather single refresh lease",
+    "four seats",
+    "fifth guest rejected",
+    "shared public campground",
+    "shared public fire idempotency",
+    "public chat",
+    "shared gear placement",
+    "unpacked gear denied",
+    "outsider world read denied",
+    "public world RLS",
+    "authenticated campground channel RLS"
+  ]
+}

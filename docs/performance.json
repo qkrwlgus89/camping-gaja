@@ -1,0 +1,79 @@
+{
+  "environment": "macOS, headless installed Chrome, SwiftShader software WebGL, 360x800, DPR 2, application DPR cap 1.25, no mobile GPU",
+  "browser": "157.0.8103.79",
+  "network": "10 Mbps down / 5 Mbps up / 80 ms latency / cache disabled",
+  "sceneReadyMs": 871,
+  "threeReadyMs": 3835,
+  "fcpMs": 3308,
+  "transferredResourceBytes": 510597,
+  "externalModelTextureAudioBytes": 0,
+  "renderFps": 29.1,
+  "condition": "current KST night, neutral cloudy weather, fire off, walking right",
+  "resources": [
+    {
+      "name": "/scenes/fire-night.svg",
+      "bytes": 25412,
+      "decoded": 71713
+    },
+    {
+      "name": "/_next/static/chunks/3-9l6260f7qo6.css",
+      "bytes": 6855,
+      "decoded": 24604
+    },
+    {
+      "name": "/_next/static/chunks/0wfurka9errm3.js",
+      "bytes": 7627,
+      "decoded": 21947
+    },
+    {
+      "name": "/_next/static/chunks/turbopack-2u1d16houkiyo.js",
+      "bytes": 4205,
+      "decoded": 9974
+    },
+    {
+      "name": "/_next/static/chunks/3qfy96eoyh-ek.js",
+      "bytes": 3815,
+      "decoded": 13994
+    },
+    {
+      "name": "/_next/static/chunks/04c9_w2didbsh.js",
+      "bytes": 3306,
+      "decoded": 5567
+    },
+    {
+      "name": "/_next/static/chunks/02to5fbmja2cb.js",
+      "bytes": 48881,
+      "decoded": 181865
+    },
+    {
+      "name": "/_next/static/chunks/39_j1bdzreq0m.js",
+      "bytes": 72052,
+      "decoded": 229288
+    },
+    {
+      "name": "/_next/static/chunks/1ub9yw26_d5b5.js",
+      "bytes": 88262,
+      "decoded": 312914
+    },
+    {
+      "name": "/api/time",
+      "bytes": 345,
+      "decoded": 25
+    },
+    {
+      "name": "/api/weather",
+      "bytes": 436,
+      "decoded": 144
+    },
+    {
+      "name": "/icon.svg",
+      "bytes": 516,
+      "decoded": 266
+    },
+    {
+      "name": "/_next/static/chunks/2x3mg2313gwc1.js",
+      "bytes": 248885,
+      "decoded": 943146
+    }
+  ]
+}
