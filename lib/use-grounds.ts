@@ -7,7 +7,7 @@ import {validMotion} from './world';
 import type {Motion} from './types';
 type Reply={world:Grounds;userId:string;motions?:Motion[]};
 export function useGrounds(onEvent:(event:GroundEvent)=>void){
- const [world,setWorld]=useState<Grounds>(emptyGrounds),[peers,setPeers]=useState<Record<string,Motion>>({}),[status,setStatus]=useState<'local'|'connected'|'reconnecting'>('local'),[identity,setIdentity]=useState<Guest|null>(null),[error,setError]=useState(''),[joined,setJoined]=useState(false);
+ const [world,setWorld]=useState<Grounds>(emptyGrounds),[peers,setPeers]=useState<Record<string,Motion>>({}),[status,setStatus]=useState<'local'|'connected'|'reconnecting'>('local'),[identity,setIdentity]=useState<Guest|null>(null),[error,setError]=useState(''),[joined,setJoined]=useState(false),[errorCode,setErrorCode]=useState('');
  const active=useRef(false),auth=useRef<Guest|null>(null),latest=useRef<Motion|null>(null),channel=useRef<RealtimeChannel|null>(null),snapshot=useRef(world),sequence=useRef(0),lastSend=useRef(0),seen=useRef(new Set<string>()),enteredAt=useRef(Date.now()),callback=useRef(onEvent),lastSeq=useRef(new Map<string,number>());callback.current=onEvent;
  const receive=useCallback((data:unknown,members=snapshot.current.visitors)=>{if(!validMotion(data)||data.userId===auth.current?.userId||!members.some(v=>v.userId===data.userId)||data.seq<=(lastSeq.current.get(data.userId)??-1))return;lastSeq.current.set(data.userId,data.seq);setPeers(p=>{if(p[data.userId]){Object.assign(p[data.userId],data);return p;}return{...p,[data.userId]:data};});},[]);
  const apply=useCallback((reply:Reply)=>{
@@ -21,7 +21,7 @@ export function useGrounds(onEvent:(event:GroundEvent)=>void){
   const response=await fetch('/api/grounds',{method:action==='read'?'GET':'POST',headers:{Authorization:`Bearer ${who.token}`,...(action!=='read'?{'Content-Type':'application/json'}:{})},...(action!=='read'?{body:JSON.stringify({action,...body})}:{}),cache:'no-store',signal:AbortSignal.timeout(10000)});
   const reply=await response.json();if(!response.ok){if(reply.error==='AUTH_REQUIRED'&&who.mode==='local')localStorage.removeItem('camp-local-guest');throw Object.assign(Error(errorMessages[reply.error]??'캠핑장 연결을 확인하고 있어요.'),{code:reply.error});}return reply as Reply;
  },[]);
- const enter=useCallback(async(name:string,bag:Gear[])=>{try{enteredAt.current=Date.now();const r=await api('enter',{name,bag});active.current=true;setJoined(true);apply(r);setStatus('connected');setError('');return true;}catch(e){setError((e as Error).message);return false;}},[api,apply]);
+ const enter=useCallback(async(name:string,bag:Gear[])=>{try{enteredAt.current=Date.now();const r=await api('enter',{name,bag});active.current=true;setJoined(true);apply(r);setStatus('connected');setError('');setErrorCode('');return true;}catch(e){setError((e as Error).message);setErrorCode((e as {code?:string}).code??'connection_unavailable');setStatus(active.current?'reconnecting':'local');return false;}},[api,apply]);
  const act=useCallback(async(action:string,body:Record<string,unknown>={})=>{
   if(!active.current||status!=='connected'||!navigator.onLine)return false;
   const requestId=crypto.randomUUID();try{let r:Reply;try{r=await api(action,{...body,requestId});}catch(e){if(e instanceof TypeError||['AbortError','TimeoutError'].includes((e as Error).name))r=await api(action,{...body,requestId});else throw e;}apply(r);return true;}catch(e){setError((e as Error).message);return false;}
@@ -48,5 +48,5 @@ export function useGrounds(onEvent:(event:GroundEvent)=>void){
   const online=()=>{if(navigator.onLine)void read(true);else setStatus('reconnecting');};const visibility=()=>{if(!document.hidden)online();};addEventListener('online',online);addEventListener('offline',online);document.addEventListener('visibilitychange',visibility);
   return()=>{disposed=true;clearInterval(poll);clearInterval(heartbeat);clearInterval(pose);removeEventListener('online',online);removeEventListener('offline',online);document.removeEventListener('visibilitychange',visibility);if(ch)void sb?.removeChannel(ch);channel.current=null;};
  },[identity?.userId,joined,api,apply,receive,sendMotion]);
- return {world,peers,status,identity,error,setError,enter,act,sendMotion};
+ return {world,peers,status,identity,error,errorCode,setError,enter,act,sendMotion};
 }

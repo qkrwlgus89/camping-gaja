@@ -64,6 +64,6 @@ export async function groundCommand(request:Request,body:Record<string,unknown>)
   return {...localSnapshot(),userId:actor};
  }
  const {data,error}=await admin().rpc('campground_command',{p_actor:actor,p_action:action,p_payload:payload});
- if(error){const code=['SEAT_EXPIRED','RATE_LIMITED','GEAR_NOT_PACKED','OUTSIDE_PITCH'].find(c=>error.message.includes(c));throw new CampError(code??'SERVICE_UNAVAILABLE',code==='RATE_LIMITED'?429:code?403:503);}
+ if(error){if(["PGRST202","PGRST205","42P01","42883"].includes(error.code))throw new CampError("CAMP_SETUP_REQUIRED",503);const code=['SEAT_EXPIRED','RATE_LIMITED','GEAR_NOT_PACKED','OUTSIDE_PITCH'].find(c=>error.message.includes(c));throw new CampError(code??'SERVICE_UNAVAILABLE',code==='RATE_LIMITED'?429:code?403:503);}
  return {world:data as Grounds,userId:actor};
 }

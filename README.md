@@ -1,4 +1,4 @@
-# 캠핑가자 v1.1.0
+# 캠핑가자 v1.1.1
 
 인제 숲에서 별을 보고, 짐을 놓고, 함께 머무르는 3인칭 캠핑 웹입니다. 입장 전 0~3개의 용품을 고르고 공동 캠핑장에 들어갑니다. 각 텐트는 친구 초대로 최대 4명, 텐트 밖에서는 다른 캠퍼도 만납니다. 최초 기획서의 비공개 2인 구상은 사용자의 후속 요청에 따라 공동 캠핑장·4인 텐트로 확장했습니다.
 
@@ -75,14 +75,14 @@ API: `/api/time`, `/api/weather`, `/api/grounds`(입장·조회·heartbeat·용�
 
 설정 → 날씨·시간 실험실에서 맑음/비/진눈깨비/눈/자료 없음/2시간 경과/새벽/낮/노을/밤/자정/WebGL 중단을 시험합니다. 날씨 샘플은 공동 캠핑장에 공유되고 시간 미리 보기는 개인 설정입니다. 공개 배포에서는 실험실을 꺼 두세요.
 
-## v1.1.0을 별도 Preview URL로 배포
+## v1.1.1을 별도 Preview URL로 배포
 
 Vercel에 Next.js 프로젝트를 연결하고 Preview 환경에 위 Supabase·KMA 값을 먼저 설정합니다. Install `npm ci`, Build `npm run build`, Output 기본값, Node 24.x. 새 Preview는 기존 Production URL을 변경하지 않습니다.
 
 ```sh
 npx vercel@latest login
 npx vercel@latest link
-npx vercel@latest deploy --meta release=v1.1.0
+npx vercel@latest deploy --meta release=v1.1.1
 ```
 
 `link`에서는 기존 camping-gaja 프로젝트를 선택합니다. 완전히 별도 프로젝트가 필요하면 이 단계에서 새 `camping-gaja-v1-1` 프로젝트를 선택/생성하고 그 프로젝트에도 환경 변수를 넣으세요. 새 프로젝트의 첫 배포는 그 새 프로젝트의 Production이 되며, 기존 camping-gaja에는 영향을 주지 않습니다. `deploy`가 새 Preview URL을 출력합니다. 이 작업에서는 원격 push/실제 배포를 수행하지 않았습니다.
@@ -90,7 +90,7 @@ npx vercel@latest deploy --meta release=v1.1.0
 Preview 확인 후 기존 Production으로 승격하려는 경우에만:
 
 ```sh
-npx vercel@latest deploy --prod --meta release=v1.1.0
+npx vercel@latest deploy --prod --meta release=v1.1.1
 ```
 
 ## 검증
@@ -105,3 +105,9 @@ CAMP_TEST_PGPORT=55438 PSQL_BIN=/opt/homebrew/opt/postgresql@18/bin/psql npm run
 ```
 
 설치된 Chrome이 없으면 `npx playwright install chromium` 후 `PLAYWRIGHT_CHANNEL`을 생략합니다. 프로덕션 검사에는 빌드 시 실험실 플래그를 켜고, `ENABLE_LOCAL_DEMO=true npm start -- --port 3001` 후 `TEST_BASE_URL=http://localhost:3001`을 지정하세요. DB 검사는 폐기 가능한 localhost PostgreSQL에 임시 DB를 만들고 삭제합니다. Supabase auth/realtime 최소 stub을 사용하므로 실제 GoTrue/WebSocket 검증을 대신하지 않습니다.
+
+## 공동 캠핑장에 연결되지 않을 때
+
+`anonymous_provider_disabled`는 Supabase에서 익명 입장이 꺼진 상태입니다. Supabase Dashboard → Authentication → Sign In / Providers에서 **Allow anonymous sign-ins**를 켜고 저장한 뒤 앱의 **다시 연결**을 누르세요. 이 인증 설정은 DB 마이그레이션과 별개이며, 설정만 켤 때는 앱 재배포가 필요하지 않습니다.
+
+v1.1.1은 익명 인증 오류 코드를 보존하고, 미연결 상태의 채팅 전송을 막으며 재연결 버튼을 제공합니다. 연결에 실패한 메시지는 전송된 것처럼 로컬에 추가하지 않고 초안을 유지합니다. [인증 수정 검증](docs/AUTH-FIX.md)을 참고하세요.

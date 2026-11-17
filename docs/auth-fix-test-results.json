@@ -1,0 +1,28 @@
+{
+  "release": "1.1.1",
+  "unitPassed": 13,
+  "localProductionBuild": "passed",
+  "browserTests": [
+    {
+      "name": "independent sessions share public camp, four-seat invites, motion, pose, greeting, fire, weather and reconnect",
+      "status": "passed",
+      "durationMs": 21636
+    },
+    {
+      "name": "failed guest access disables public chat, shows a contained message and retries without reload",
+      "status": "passed",
+      "durationMs": 836
+    }
+  ],
+  "remoteChecks": {
+    "anonymousSettingsAfterSave": true,
+    "anonymousSignupStatus": 200,
+    "groundsStatus": 503,
+    "missingTables": [
+      "camp_rooms",
+      "campground_state"
+    ],
+    "databaseCode": "PGRST205"
+  },
+  "remoteWrites": "Two diagnostic anonymous sessions created; no camp join/chat/database migration/deployment performed."
+}

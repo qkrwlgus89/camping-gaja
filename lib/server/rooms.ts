@@ -73,6 +73,7 @@ export async function command(request: Request, action: string, id: string | nul
   else {
     const { data, error } = await admin().rpc("camp_command", { p_actor: actor, p_action: action, p_room: id, p_payload: payload });
     if (error) {
+      if (["PGRST202", "PGRST205", "42P01", "42883"].includes(error.code)) throw new CampError("CAMP_SETUP_REQUIRED", 503);
       const code = ["ROOM_FULL", "ROOM_EXPIRED", "SEAT_EXPIRED", "INVITE_EXPIRED", "RATE_LIMITED", "FIRE_NOT_LIT"].find(s => error.message.includes(s));
       throw new CampError(code ?? "ROOM_SERVICE_ERROR", code === "RATE_LIMITED" ? 429 : code === "SEAT_EXPIRED" ? 403 : code === "ROOM_FULL" ? 409 : code === "INVITE_EXPIRED" ? 410 : code === "ROOM_EXPIRED" ? 404 : 503);
     }
