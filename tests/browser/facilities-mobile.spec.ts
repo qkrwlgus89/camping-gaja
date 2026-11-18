@@ -1,0 +1,10 @@
+import {test,expect} from '@playwright/test';
+test('mobile portrait WebGL facility touch, sky drag and barbecue scrolling',async({browser,baseURL})=>{
+ test.setTimeout(90000);const ctx=await browser.newContext({viewport:{width:360,height:800},deviceScaleFactor:2,isMobile:true,hasTouch:true}),p=await ctx.newPage(),errors:string[]=[];p.on('pageerror',e=>errors.push(e.message));
+ try{
+ await p.goto(baseURL!);await p.locator('.enter-camp').tap();await expect(p.locator('main')).toHaveAttribute('data-graphics','3d');await expect(p.locator('main')).toHaveAttribute('data-connection','connected');await p.getByRole('button',{name:'해먹',exact:true}).tap();await p.getByRole('button',{name:/해먹 3/}).tap();await expect(p.locator('main')).toHaveAttribute('data-resource','hammock-2');
+ const cdp=await ctx.newCDPSession(p);await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:220,y:450,id:1}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:220,y:300,id:1}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await expect.poll(async()=>Number(await p.locator('main').getAttribute('data-pitch'))).toBeGreaterThan(.65);await p.screenshot({path:'docs/mobile-hammock-webgl-v1.2.png'});await p.getByRole('button',{name:'일어나기',exact:true}).tap();
+ await p.getByRole('button',{name:'바베큐',exact:true}).tap();await p.getByRole('button',{name:'버섯',exact:true}).tap();await p.getByRole('button',{name:'8번 그릴에 버섯 올리기'}).scrollIntoViewIfNeeded();await p.getByRole('button',{name:'8번 그릴에 버섯 올리기'}).tap();await expect(p.locator('.grill-slot').nth(7).locator('strong')).toHaveText('버섯');await p.getByRole('button',{name:'8번 음식 뒤집기'}).tap();await expect(p.locator('.grill-slot').nth(7)).toContainText('초 더 굽기');await p.screenshot({path:'docs/mobile-barbecue-webgl-v1.2.png'});await p.getByRole('button',{name:'8번 그릴 비우기'}).tap();await p.getByRole('button',{name:'바베큐 닫기'}).scrollIntoViewIfNeeded();await p.getByRole('button',{name:'바베큐 닫기'}).tap();
+ expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(errors).toEqual([]);
+ }finally{await ctx.close();}
+});

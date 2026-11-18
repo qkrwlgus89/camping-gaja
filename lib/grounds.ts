@@ -1,3 +1,4 @@
+import {emptySocial,type Social} from './social';
 import type { Fire, Motion, Weather } from './types';
 export const GEAR = {
   lantern:{name:'오일 랜턴',detail:'텐트에 따뜻한 빛',icon:'lantern'},
@@ -11,7 +12,7 @@ export type Gear = keyof typeof GEAR;
 export type Placement = {item:Gear;x:number;z:number};
 export type Visitor = {userId:string;name:string;bag:Gear[];placements:Placement[];roomId:string|null;tentIndex:number;seat:number;lastSeen:number};
 export type GroundEvent = {id:string;userId:string;kind:'wave'|'skip'|'marshmallow'|'chat';value:number;text?:string;createdAt:number};
-export type Grounds = {version:number;fire:Fire;visitors:Visitor[];events:GroundEvent[];weather?:Weather|null};
+export type Grounds = {version:number;fire:Fire;visitors:Visitor[];events:GroundEvent[];weather?:Weather|null;social?:Social};
 export type SkyView = {active:boolean;lines:boolean;selected:string|null;focus:[number,number]|null};
 export type WorldActivity = {kind:'none'|'mallow'|'skip';angle:number;heat:[number,number];holding:boolean;power:number;result:number|null;finished:boolean};
 export const EMPTY_ACTIVITY:WorldActivity={kind:'none',angle:0,heat:[0,0],holding:false,power:0,result:null,finished:false};
@@ -19,4 +20,4 @@ export function tentPosition(index:number):[number,number] {
   const slots:[number,number][]=[[-9,-5],[9,-5],[-19,7],[19,7],[-10,20],[10,20],[-27,28],[27,28]];
   const base=slots[Math.max(0,index)%8];return [base[0],base[1]+Math.floor(Math.max(0,index)/8)*18];
 }
-export const emptyGrounds=():Grounds=>({version:0,fire:{lit:true,woodAt:Date.now()-60000,startedAt:Date.now()-60000},visitors:[],events:[]});
+export const emptyGrounds=():Grounds=>({version:0,fire:{lit:true,woodAt:Date.now()-60000,startedAt:Date.now()-60000},visitors:[],events:[],social:emptySocial()});

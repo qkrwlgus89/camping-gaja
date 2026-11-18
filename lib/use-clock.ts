@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 export function useClock(initialEpoch: number) {
   const base = useRef({ epoch: initialEpoch, perf: 0 });
   const [now, setNow] = useState(initialEpoch);
@@ -23,5 +23,6 @@ export function useClock(initialEpoch: number) {
     document.addEventListener("visibilitychange", visibility);
     return () => { live = false; clearInterval(tick); clearInterval(refresh); document.removeEventListener("visibilitychange", visibility); };
   }, []);
-  return { now, synced };
+  const frameNow = useCallback(() => base.current.epoch + performance.now() - base.current.perf, []);
+  return { now, synced, frameNow };
 }

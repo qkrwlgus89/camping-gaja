@@ -24,7 +24,7 @@ export function useGrounds(onEvent:(event:GroundEvent)=>void){
  const enter=useCallback(async(name:string,bag:Gear[])=>{try{enteredAt.current=Date.now();const r=await api('enter',{name,bag});active.current=true;setJoined(true);apply(r);setStatus('connected');setError('');setErrorCode('');return true;}catch(e){setError((e as Error).message);setErrorCode((e as {code?:string}).code??'connection_unavailable');setStatus(active.current?'reconnecting':'local');return false;}},[api,apply]);
  const act=useCallback(async(action:string,body:Record<string,unknown>={})=>{
   if(!active.current||status!=='connected'||!navigator.onLine)return false;
-  const requestId=crypto.randomUUID();try{let r:Reply;try{r=await api(action,{...body,requestId});}catch(e){if(e instanceof TypeError||['AbortError','TimeoutError'].includes((e as Error).name))r=await api(action,{...body,requestId});else throw e;}apply(r);return true;}catch(e){setError((e as Error).message);return false;}
+  const requestId=crypto.randomUUID();try{let r:Reply;try{r=await api(action,{...body,requestId});}catch(e){if(e instanceof TypeError||['AbortError','TimeoutError'].includes((e as Error).name))r=await api(action,{...body,requestId});else throw e;}apply(r);setError('');return true;}catch(e){setError((e as Error).message);return false;}
  },[api,apply,status]);
  const sendMotion=useCallback((m:Motion,force=false)=>{
   if(!active.current||!auth.current||!navigator.onLine)return;
@@ -48,5 +48,6 @@ export function useGrounds(onEvent:(event:GroundEvent)=>void){
   const online=()=>{if(navigator.onLine)void read(true);else setStatus('reconnecting');};const visibility=()=>{if(!document.hidden)online();};addEventListener('online',online);addEventListener('offline',online);document.addEventListener('visibilitychange',visibility);
   return()=>{disposed=true;clearInterval(poll);clearInterval(heartbeat);clearInterval(pose);removeEventListener('online',online);removeEventListener('offline',online);document.removeEventListener('visibilitychange',visibility);if(ch)void sb?.removeChannel(ch);channel.current=null;};
  },[identity?.userId,joined,api,apply,receive,sendMotion]);
- return {world,peers,status,identity,error,errorCode,setError,enter,act,sendMotion};
+ const refresh=useCallback(async()=>{try{const r=await api('read');apply(r);return r.world;}catch{return null;}},[api,apply]);
+ return {world,peers,status,identity,error,errorCode,setError,enter,act,refresh,sendMotion};
 }

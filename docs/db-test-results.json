@@ -1,7 +1,7 @@
 {
   "passed": 23,
   "checks": [
-    "both migrations",
+    "all three migrations",
     "concurrent single-use join",
     "one-time invite",
     "idempotent private fire",

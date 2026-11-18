@@ -1,0 +1,139 @@
+{
+  "passed": 26,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "all three migrations apply and new migration can be replayed",
+      "passed": true,
+      "durationMs": 70
+    },
+    {
+      "name": "legacy snapshot and old mutations retain social and fractional fire timestamps",
+      "passed": true,
+      "durationMs": 43
+    },
+    {
+      "name": "RPCs and resolver are denied to clients, RLS still restricts outsiders",
+      "passed": true,
+      "durationMs": 74
+    },
+    {
+      "name": "nonvisitors, missing requests, unknown actions and resources are rejected",
+      "passed": true,
+      "durationMs": 55
+    },
+    {
+      "name": "concurrent resource claims permit exactly one owner",
+      "passed": true,
+      "durationMs": 45
+    },
+    {
+      "name": "one actor has one resource and releases only their own seat",
+      "passed": true,
+      "durationMs": 102
+    },
+    {
+      "name": "same request is idempotent and cannot be reused by another actor",
+      "passed": true,
+      "durationMs": 56
+    },
+    {
+      "name": "stale occupied seats expire on read without changing stored state or version",
+      "passed": true,
+      "durationMs": 123
+    },
+    {
+      "name": "barbecue validates food and slot and rejects simultaneous slot use",
+      "passed": true,
+      "durationMs": 85
+    },
+    {
+      "name": "barbecue requires 30 seconds and a flip, shared serve and eat are atomic",
+      "passed": true,
+      "durationMs": 162
+    },
+    {
+      "name": "eating expires at four seconds without an UPDATE",
+      "passed": true,
+      "durationMs": 71
+    },
+    {
+      "name": "overdone food remains edible and serving table is capped at twelve",
+      "passed": true,
+      "durationMs": 148
+    },
+    {
+      "name": "circle host recruitment releases a seat and prevents duplicate events",
+      "passed": true,
+      "durationMs": 103
+    },
+    {
+      "name": "start requires host and at least four participants",
+      "passed": true,
+      "durationMs": 75
+    },
+    {
+      "name": "recruiting supports eight maximum and releases participant resources",
+      "passed": true,
+      "durationMs": 123
+    },
+    {
+      "name": "start resets all old recruitment leases and schedules 5s countdown plus 60s run",
+      "passed": true,
+      "durationMs": 42
+    },
+    {
+      "name": "countdown and run time boundaries resolve identically without writing",
+      "passed": true,
+      "durationMs": 98
+    },
+    {
+      "name": "fifteen-second lease expiry prunes participants and transfers host",
+      "passed": true,
+      "durationMs": 28
+    },
+    {
+      "name": "losing one of four leases at exactly fifteen seconds ends the event",
+      "passed": true,
+      "durationMs": 28
+    },
+    {
+      "name": "circle heartbeat rejects outsiders and renews only the actor lease",
+      "passed": true,
+      "durationMs": 45
+    },
+    {
+      "name": "leaving below four ends the event and finished phase cannot resurrect",
+      "passed": true,
+      "durationMs": 119
+    },
+    {
+      "name": "recruitment expires at two minutes even while visitors remain live",
+      "passed": true,
+      "durationMs": 68
+    },
+    {
+      "name": "fire stop finishes a circle and restarting fire cannot revive it",
+      "passed": true,
+      "durationMs": 131
+    },
+    {
+      "name": "recruiting host transfer and empty recruitment cleanup",
+      "passed": true,
+      "durationMs": 89
+    },
+    {
+      "name": "an active circle remains finished after fire stop and restart",
+      "passed": true,
+      "durationMs": 173
+    },
+    {
+      "name": "repeated snapshots and legacy read do not change campground version",
+      "passed": true,
+      "durationMs": 117
+    }
+  ],
+  "draftSha256": "8149579fe373fd1f6d703e8abc16646042479a8b29b191c05d5380320d2c836a",
+  "databaseKind": "Disposable PostgreSQL18, 127.0.0.1:55438; auth/realtime minimal stubs",
+  "verifiedAt": "2026-11-18T13:14:42.805Z"
+}

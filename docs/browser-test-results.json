@@ -1,33 +1,80 @@
 {
-  "release": "1.1.0",
+  "release": "1.2.0",
   "dateKST": "2026-11-18",
-  "environment": "macOS, installed Chrome 157, headless SwiftShader; Next production server on localhost:3001; local demo adapter",
-  "passed": 5,
+  "environment": "macOS, Chrome 157, headless SwiftShader; local Next production server and local demo adapter",
+  "passed": 12,
   "tests": [
     {
       "name": "packing, third person, continuous walking, vertical look, stars and moon, skewer axis and animated fire",
       "status": "passed",
-      "durationMs": 29749
+      "durationMs": 36852
     },
     {
       "name": "independent sessions share public camp, four-seat invites, motion, pose, greeting, fire, weather and reconnect",
       "status": "passed",
-      "durationMs": 21108
+      "durationMs": 26312
     },
     {
       "name": "mobile portrait/landscape touch joystick, no overflow, large actions, tent contents and local journal",
       "status": "passed",
-      "durationMs": 15054
+      "durationMs": 20620
     },
     {
       "name": "browser-only photo PNG and real audio require first gesture, personal volume persists",
       "status": "passed",
-      "durationMs": 5552
+      "durationMs": 7096
     },
     {
       "name": "weather missing, stale and WebGL failure preserve still navigation",
       "status": "passed",
-      "durationMs": 2919
+      "durationMs": 3964
+    },
+    {
+      "name": "failed guest access disables public chat, shows a contained message and retries without reload",
+      "status": "passed",
+      "durationMs": 1083
+    },
+    {
+      "name": "missing campground migration is reported separately and can reconnect after setup",
+      "status": "passed",
+      "durationMs": 1231
+    },
+    {
+      "name": "mobile portrait WebGL facility touch, sky drag and barbecue scrolling",
+      "status": "passed",
+      "durationMs": 14183
+    },
+    {
+      "name": "shared hammock occupancy, reconnect, chair height scene and immediate keyboard control",
+      "status": "passed",
+      "durationMs": 28704
+    },
+    {
+      "name": "barbecue food, flip, 30-second shared serving, eating and 8 table seats",
+      "status": "passed",
+      "durationMs": 46136
+    },
+    {
+      "name": "four independent URL visitors opt in, hold hands continuously and leave a campfire circle",
+      "status": "passed",
+      "durationMs": 46253
+    },
+    {
+      "name": "solar disk and pastel sunrise/sunset coexist with stars and moon",
+      "status": "passed",
+      "durationMs": 31581
     }
-  ]
+  ],
+  "runs": {
+    "full": {
+      "passed": 9,
+      "failed": 3
+    },
+    "followup": {
+      "passed": 3,
+      "failed": 0,
+      "port": 3012
+    }
+  },
+  "note": "Full regression followed by targeted verification of three failed checks: committed drag state on release; movement threshold adjusted for software rendering; isolated fresh server for shared-food state. Avatar appearance refinements deferred by user. Physical mobile devices and live Vercel/Supabase not verified."
 }

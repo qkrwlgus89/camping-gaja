@@ -1,4 +1,4 @@
-# 캠핑가자 v1.1.1
+# 캠핑가자 v1.2.0
 
 인제 숲에서 별을 보고, 짐을 놓고, 함께 머무르는 3인칭 캠핑 웹입니다. 입장 전 0~3개의 용품을 고르고 공동 캠핑장에 들어갑니다. 각 텐트는 친구 초대로 최대 4명, 텐트 밖에서는 다른 캠퍼도 만납니다. 최초 기획서의 비공개 2인 구상은 사용자의 후속 요청에 따라 공동 캠핑장·4인 텐트로 확장했습니다.
 
@@ -34,9 +34,10 @@ npm run dev
 ## Supabase
 
 1. Authentication → Anonymous Sign-Ins를 켭니다. 입장 버튼을 누르면 익명 세션을 확보합니다.
-2. 다음 두 마이그레이션을 **순서대로** SQL Editor에 실행하거나 CLI로 적용합니다. 기존 v1 DB에도 두 번째 마이그레이션을 적용해야 4좌석/공동 캠핑장이 동작합니다.
+2. 다음 세 마이그레이션을 **순서대로** SQL Editor에 실행하거나 CLI로 적용합니다. 001/002를 이미 적용했다면 새 social 파일만 추가 실행합니다. 기존 두 파일은 변경하지 않았습니다.
    - `supabase/migrations/202611170001_camp.sql`
    - `supabase/migrations/202611170002_community.sql`
+   - `supabase/migrations/202611180001_social.sql` ← v1.2 신규, 공용 시설·바베큐·불돌기
 
 ```sh
 npx supabase login
@@ -56,16 +57,25 @@ npx supabase db push
 
 API: `/api/time`, `/api/weather`, `/api/grounds`(입장·조회·heartbeat·용품 배치·공동 화로·공개 대화·체험), `/api/rooms`, `/api/rooms/:id`(초대·입장·좌석·재접속), `/api/session`(로컬 전용). 인증 요청은 `Authorization: Bearer <guest token>`을 사용합니다.
 
+공용 시설은 `campground_state.social`에 저장합니다. 서비스 전용 `campground_social_command`가 행 잠금으로 점유·음식 소비·모임 참가를 처리합니다. 조회는 만료를 계산만 하므로 Realtime UPDATE를 연쇄 발생시키지 않습니다. Vercel에 상주 서버나 장시간 타이머가 필요하지 않습니다.
+
 ## 조작·장면
 
-- PC: WASD/방향키, 드래그로 좌우·위아래 보기, J/L 회전, R 앉기/일어나기, H 손 인사, E 체험, M 소리, B 가방. 모바일은 일어나기 후 가상 조이스틱·풍경 드래그.
+- PC: WASD/방향키, 드래그로 좌우·위아래 보기, J/L 회전, R 앉기/일어나기, H 손 인사, E 체험, M 소리, B 가방. 모바일은 가상 조이스틱·풍경 드래그. 입장 직후 서 있는 상태로 시작합니다. 클릭한 버튼은 이동키를 가로채지 않으며 입력창·슬라이더·모달의 키 조작은 유지합니다.
 - 내 아바타가 보이는 3인칭 시점. 몸은 실제 이동 방향으로 부드럽게 돌아가며 카메라 회전과 독립적입니다. 이동·카메라를 같은 렌더 프레임에서 갱신하고 네트워크 갱신률과 분리합니다. 저속 기기에서는 DPR을 단계적으로 낮춥니다.
+- 아바타는 1.38m SD 비율, 둥근 얼굴·날씬한 재킷·8종 헤어와 피부/옷 조합입니다. 게스트 ID로 외형을 결정하여 새로고침·재접속 때 유지하며 커스터마이즈 UI는 없습니다.
+- 의자는 골반 접점을 실제 좌면 y=0.5475m에 맞춥니다. 공용 의자 7개와 바베큐 의자 8개는 한 자리당 한 명만 앉습니다.
+- 해먹 4개: 상단 `해먹`에서 빈 자리를 선택하거나 3D 해먹을 누르세요. 등 접점을 천의 중앙에 맞춰 눕고 드래그로 하늘을 봅니다. 이동키·Esc·`일어나기`로 나오며 다른 사람에게도 누운 자세가 보입니다. 재접속 때 점유를 복원하고 90초 부재 시 자리를 비웁니다.
+- 태양은 인제 SunCalc 고도·방위에 맞춰 원반과 헤일로를 표시합니다. 새벽은 복숭아/분홍빛, 저녁은 주황/보라빛 하늘·안개·광원으로 연속 변화합니다. `별 보기 → 해 바라보기`로 찾을 수 있습니다. 낮은 해는 숲·지형에 가려질 수 있습니다.
+- 바베큐: 상단 버튼 또는 3D 그릴을 누릅니다. 고기·버섯·옥수수, 그릴 8칸, 한 번 뒤집기와 30초 후 나누기, 60초 이후 더 구워진 색(먹기 가능). 공유 테이블에는 최대 12개, 의자 8개가 있으며 누구나 먹을 수 있습니다. 4초간 음식과 먹는 손동작을 상대에게 표시합니다.
+- 함께 불 돌기: 직접 모집하면 원하는 사람이 참가합니다. 4~8명일 때 모집자가 시작, 공통 시각으로 5초 카운트다운 후 60초 손잡고 돕니다. 이동키·Esc·나오기, 4명 미만, 화로 끄기, 시작 후 참가 heartbeat 15초 끊김에서 정리합니다. 모집은 2분 만료, 모집자 부재 시 다음 참가자에게 넘깁니다. 자동 음악은 재생하지 않으며 행사 중 대화할 수 있습니다.
+- 닉네임은 머리 위 작은 글자, 대화는 별도의 최대 3줄 말풍선으로 8초 표시합니다.
 - 별 관측: 관측 별 41,411개, 현재 인제 지평좌표, 별자리 연결선/찾기, 달 표면·위상. **은하수 없음**. 달의 위치·크기는 관측 편의를 위한 연출입니다.
 - 마시멜로는 화로 위 꼬치 축을 중심으로 회전합니다. 계곡에서는 실제 3D 돌의 튐/수면 물결을 표시합니다. 두 체험은 모달을 열지 않습니다.
 - 텐트 안: 차 우리기, 침낭에 눕기, 개인 저널, 랜턴 밝기. 가방의 용품은 내 텐트 앞/공동 화로 6m 이내에 배치합니다. 바닥 미리보기와 허용/불가 테두리, `여기에 놓기` 버튼, 배치 후 이름 표시를 제공합니다.
 - 엽서: 3D 또는 구역 스틸 + 선택한 JPG/PNG/WebP 사진(15MB 이하) + 날짜/날씨를 브라우저 Canvas에서 PNG로 합성합니다. 사진 업로드 API는 없습니다.
 - 첫 재생은 **소리 켜기**. 실제 CC0 환경음 5종, 위치/날씨에 따른 믹싱, 개인 음량, ASMR 화면. 새로고침하면 무음으로 시작합니다.
-- WebGL 실패·context loss·16초 준비 지연이면 구역별 스틸/이동 버튼을 제공합니다. `/?view=still`로도 시험할 수 있습니다. 스틸 모드에는 3D 아바타/돌의 움직임이 없고, 버튼 체험과 공유 상태·엽서를 계속 사용할 수 있습니다.
+- WebGL 실패·context loss·16초 준비 지연이면 구역별 스틸/이동 버튼을 제공합니다. `/?view=still`로도 시험할 수 있습니다. 스틸 모드는 3D 아바타/돌의 움직임 없이 공유 상태·엽서·시설 점유·음식·모임을 사용할 수 있습니다. 6구역×4시간대 스틸 24장을 제공합니다.
 
 ## 시간·기상청
 
@@ -75,22 +85,34 @@ API: `/api/time`, `/api/weather`, `/api/grounds`(입장·조회·heartbeat·용�
 
 설정 → 날씨·시간 실험실에서 맑음/비/진눈깨비/눈/자료 없음/2시간 경과/새벽/낮/노을/밤/자정/WebGL 중단을 시험합니다. 날씨 샘플은 공동 캠핑장에 공유되고 시간 미리 보기는 개인 설정입니다. 공개 배포에서는 실험실을 꺼 두세요.
 
-## v1.1.1을 별도 Preview URL로 배포
+## v1.2.0을 GitHub 또는 별도 Preview URL로 배포
+
+현재 브랜치는 `version_1.0`입니다. **DB에 새 social 마이그레이션을 먼저 적용**한 뒤 직접 실행하세요. 이 작업에서는 commit/push/deploy를 실행하지 않습니다.
+
+```sh
+git add .
+git commit -m "feat: shared campground facilities and avatars v1.2.0"
+git push origin version_1.0
+```
+
+Git 연동 Vercel은 브랜치 설정에 따라 배포합니다. `version_1.0`이 Production Branch이면 운영에, 다른 브랜치이면 Preview에 반영됩니다. 별도 Preview 브랜치로 보려면 마지막 push 대신 `git switch -c release/v1.2.0` 다음 `git push -u origin release/v1.2.0`을 실행하세요. 빌드 성공 여부는 Vercel Deployments에서 확인합니다.
+
+브랜치별 배포 동작은 [Vercel 공식 Git 안내](https://vercel.com/docs/git)를 참고하세요. 얼굴 둥글게 다듬기·뒷머리 장식 제거·팔 짧게 펴기는 사용자의 요청으로 다음 작업에 남겼습니다.
 
 Vercel에 Next.js 프로젝트를 연결하고 Preview 환경에 위 Supabase·KMA 값을 먼저 설정합니다. Install `npm ci`, Build `npm run build`, Output 기본값, Node 24.x. 새 Preview는 기존 Production URL을 변경하지 않습니다.
 
 ```sh
 npx vercel@latest login
 npx vercel@latest link
-npx vercel@latest deploy --meta release=v1.1.1
+npx vercel@latest deploy --meta release=v1.2.0
 ```
 
-`link`에서는 기존 camping-gaja 프로젝트를 선택합니다. 완전히 별도 프로젝트가 필요하면 이 단계에서 새 `camping-gaja-v1-1` 프로젝트를 선택/생성하고 그 프로젝트에도 환경 변수를 넣으세요. 새 프로젝트의 첫 배포는 그 새 프로젝트의 Production이 되며, 기존 camping-gaja에는 영향을 주지 않습니다. `deploy`가 새 Preview URL을 출력합니다. 이 작업에서는 원격 push/실제 배포를 수행하지 않았습니다.
+`link`에서는 기존 camping-gaja 프로젝트를 선택합니다. 완전히 별도 프로젝트가 필요하면 이 단계에서 새 `camping-gaja-v1-2` 프로젝트를 선택/생성하고 그 프로젝트에도 환경 변수를 넣으세요. 새 프로젝트의 첫 배포는 그 새 프로젝트의 Production이 되며, 기존 camping-gaja에는 영향을 주지 않습니다. `deploy`가 새 Preview URL을 출력합니다. 이 작업에서는 원격 push/실제 배포를 수행하지 않았습니다.
 
 Preview 확인 후 기존 Production으로 승격하려는 경우에만:
 
 ```sh
-npx vercel@latest deploy --prod --meta release=v1.1.1
+npx vercel@latest deploy --prod --meta release=v1.2.0
 ```
 
 ## 검증
@@ -110,4 +132,4 @@ CAMP_TEST_PGPORT=55438 PSQL_BIN=/opt/homebrew/opt/postgresql@18/bin/psql npm run
 
 `anonymous_provider_disabled`는 Supabase에서 익명 입장이 꺼진 상태입니다. Supabase Dashboard → Authentication → Sign In / Providers에서 **Allow anonymous sign-ins**를 켜고 저장한 뒤 앱의 **다시 연결**을 누르세요. 이 인증 설정은 DB 마이그레이션과 별개이며, 설정만 켤 때는 앱 재배포가 필요하지 않습니다.
 
-v1.1.1은 익명 인증 오류 코드를 보존하고, 미연결 상태의 채팅 전송을 막으며 재연결 버튼을 제공합니다. 연결에 실패한 메시지는 전송된 것처럼 로컬에 추가하지 않고 초안을 유지합니다. [인증 수정 검증](docs/AUTH-FIX.md)을 참고하세요.
+v1.2.0은 익명 인증 오류 코드를 보존하고, 미연결 상태의 채팅 전송을 막으며 재연결 버튼을 제공합니다. 연결에 실패한 메시지는 전송된 것처럼 로컬에 추가하지 않고 초안을 유지합니다. [인증 수정 검증](docs/AUTH-FIX.md)을 참고하세요.

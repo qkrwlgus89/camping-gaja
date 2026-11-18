@@ -1,0 +1,85 @@
+{
+  "component": "components/camper-avatar.tsx",
+  "appearance": {
+    "deterministicSeed": "guest user UUID (appearanceHash FNV-1a)",
+    "hairSilhouettes": 8,
+    "heightMetres": 1.38,
+    "newMeshes": "Code-authored rounded SD avatar meshes, source Kenney CC0 rig retained",
+    "visibleMeshBatchesPerAvatar": 12,
+    "screenshots": [
+      "avatar-v1.2-front.png",
+      "avatar-v1.2-seat.png",
+      "avatar-v1.2-hammock.png",
+      "avatar-v1.2-circle.png"
+    ]
+  },
+  "environment": {
+    "browser": "Installed Google Chrome (headless)",
+    "renderer": "ANGLE SwiftShader WebGL2",
+    "viewport": [
+      1600,
+      850
+    ],
+    "preview": "Isolated React Three Fiber fixture using production avatar module and existing camper-cute.glb animation rig",
+    "notVerified": [
+      "Mobile physical device GPU/rendering",
+      "Vercel production rendering"
+    ],
+    "previewServerStoppedAtCompletion": true
+  },
+  "contacts": {
+    "chair": {
+      "presetsTested": 8,
+      "expectedSurfaceY": 0.5475,
+      "measuredPelvisContactY": 0.5475,
+      "method": "avatar-seat-contact.getWorldPosition after AnimationMixer update and anchor correction"
+    },
+    "hammock": {
+      "presetsTested": 2,
+      "expectedNetY": 0.64,
+      "measuredBackContactY": 0.64,
+      "method": "avatar-back-contact.getWorldPosition after AnimationMixer update and anchor correction"
+    }
+  },
+  "circle": {
+    "samplesPerParticipantCount": 10,
+    "radiusFormula": "max(1.05, 1.5 / (2 * sin(pi / n)))",
+    "wristWorldY": 0.65,
+    "results": [
+      {
+        "participants": 4,
+        "radius": 1.0606601717798214,
+        "handWorldY": 0.65,
+        "maxWristErrorMetres": 0.00035987518191339256
+      },
+      {
+        "participants": 5,
+        "radius": 1.2759762125280598,
+        "handWorldY": 0.65,
+        "maxWristErrorMetres": 8.15843973306311e-16
+      },
+      {
+        "participants": 6,
+        "radius": 1.5000000000000002,
+        "handWorldY": 0.65,
+        "maxWristErrorMetres": 8.08254562088053e-16
+      },
+      {
+        "participants": 7,
+        "radius": 1.728573653221865,
+        "handWorldY": 0.65,
+        "maxWristErrorMetres": 6.955527313080394e-16
+      },
+      {
+        "participants": 8,
+        "radius": 1.9598444473145646,
+        "handWorldY": 0.65,
+        "maxWristErrorMetres": 9.222205069512407e-16
+      }
+    ]
+  },
+  "pageErrors": [],
+  "checks": {
+    "npm run typecheck": "passed"
+  }
+}

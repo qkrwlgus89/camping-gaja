@@ -11,7 +11,7 @@ await page.waitForFunction(()=>{const i=document.querySelector('.world-still');r
 const sceneReadyMs=Date.now()-started;
 await page.waitForFunction(()=>document.querySelector('main')?.dataset.graphics==='3d',{},{timeout:20000});
 const threeReadyMs=Date.now()-started;
-await page.locator('.enter-camp').click();await page.getByRole('button',{name:/일어나기/}).click();
+await page.locator('.enter-camp').click();
 await page.locator('.view-control').click({position:{x:220,y:270}});await page.keyboard.down('d');
 await page.waitForTimeout(12000);
 const metrics=await page.evaluate(()=>({fcpMs:performance.getEntriesByName('first-contentful-paint')[0]?.startTime,resources:performance.getEntriesByType('resource').map(e=>({name:new URL(e.name).pathname,bytes:e.transferSize,decoded:e.decodedBodySize})),pixelRatio:document.querySelector('canvas')?.width/innerWidth,renderFps:Number(document.querySelector('canvas')?.dataset.fps||0),renderer:document.querySelector('canvas')?.getContext('webgl2')?.getParameter(7937)}));
