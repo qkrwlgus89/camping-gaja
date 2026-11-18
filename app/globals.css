@@ -15,3 +15,5 @@
 .rest-controls{position:absolute;z-index:7;left:35px;bottom:max(80px,calc(env(safe-area-inset-bottom) + 48px));width:max-content;opacity:.65;transition:opacity .2s}.rest-controls:hover,.rest-controls:focus-within{opacity:1}.rest-controls button{min-height:44px;display:flex;align-items:center;gap:7px;padding:10px 13px;border-radius:10px;border:1px solid #cfddd51f;background:#0d1d2670;backdrop-filter:blur(12px);font-size:10px;color:#c1cfcc}
 @media(max-width:760px){.rest-controls{left:16px;bottom:calc(env(safe-area-inset-bottom) + 100px)}}
 @media(max-height:500px) and (min-width:600px){.rest-controls{bottom:65px}}
+
+.graphics-quality{display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:12px;margin:18px 0}.graphics-quality select{font:inherit;min-height:44px;max-width:70%;padding:8px 12px;border:1px solid #c7d8ce38;border-radius:8px;color:#dbe3da;background:#14272e}.graphics-quality select:focus-visible{outline:2px solid #d5b383;outline-offset:3px}

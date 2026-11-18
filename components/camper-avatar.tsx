@@ -202,7 +202,7 @@ export function CamperAvatar({motion, self = false, lying = false, wave = false,
     const state = seated ? 'Sitting' : pose === 'walking' || dancing ? 'Walk' : 'Idle';
     if (state !== previous.current) {
       const action = rig.actions[state];
-      action.reset().setEffectiveTimeScale(dancing ? .85 : state === 'Walk' ? 1.18 : .8).setEffectiveWeight(1).play();
+      action.reset().setEffectiveTimeScale(dancing ? 1.35 : state === 'Walk' ? 1.18 : .8).setEffectiveWeight(1).play();
       if (previous.current) action.crossFadeFrom(rig.actions[previous.current], .24, false);
       previous.current = state;
     }

@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {appearanceFor} from '../lib/appearance';
-import {applySocialAction,resolveSocial,emptySocial,resourceMotion,RESOURCES,circlePose,foodStage,ownResource,type Social,type SocialAction} from '../lib/social';
+import {applySocialAction,resolveSocial,emptySocial,resourceMotion,RESOURCES,circlePose,circleWaitingPose,foodStage,ownResource,type Social,type SocialAction} from '../lib/social';
 import {INITIAL_MOTION} from '../lib/types';
 import {validMotion,walkable,zoneAt} from '../lib/world';
 const now=1800000000000,people=['a','b','c','d','e','f','g','h','i'];
@@ -32,8 +32,8 @@ test('invalid grill input and a full serving table are rejected; overdone food s
 test('circle is opt-in, one event at a time, limited to 4–8 and host start',()=>{
  let s=party(3);const eventId=s.circle!.id;assert.throws(()=>act(s,'a','circle_start',{eventId}),/EVENT_NOT_READY/);assert.throws(()=>act(s,'a','circle_open'),/EVENT_ACTIVE/);s=act(s,'d','circle_join',{eventId});assert.throws(()=>act(s,'b','circle_start',{eventId}),/EVENT_HOST_ONLY/);for(const id of people.slice(4,8))s=act(s,id,'circle_join',{eventId});assert.throws(()=>act(s,'i','circle_join',{eventId}),/EVENT_FULL/);assert.throws(()=>act(s,'a','occupy',{resourceId:'chair-0'}),/EVENT_ACTIVE/);assert.throws(()=>act(s,'i','circle_join',{eventId:randomUUID()}),/EVENT_EXPIRED/);
 });
-test('start refreshes recruitment leases then shares 5s countdown and 60s run',()=>{
- let s=party();const eventId=s.circle!.id;for(const id of people.slice(0,4))s.circle!.leases[id]=now-45000;s=act(s,'a','circle_start',{eventId});assert.ok(Object.values(s.circle!.leases).every(at=>at===now));assert.equal(fresh(s,now+4999).circle!.phase,'countdown');assert.equal(fresh(s,now+5000).circle!.phase,'active');s=act(s,'b','circle_heartbeat',{eventId},now+10000);assert.equal(s.circle!.leases.b,now+10000);for(const id of s.circle!.participants)s.circle!.leases[id]=now+65000;assert.equal(fresh(s,now+64999).circle!.phase,'active');assert.equal(fresh(s,now+65000).circle!.phase,'finished');
+test('only an explicit host start refreshes leases and begins a 60s run immediately',()=>{
+ let s=party();const eventId=s.circle!.id;assert.equal(fresh(s).circle!.phase,'recruiting');assert.equal(s.circle!.startsAt,null);for(const id of people.slice(0,4))s.circle!.leases[id]=now-45000;s=act(s,'a','circle_start',{eventId});assert.ok(Object.values(s.circle!.leases).every(at=>at===now));assert.equal(s.circle!.startsAt,now);assert.equal(fresh(s,now).circle!.phase,'active');s=act(s,'b','circle_heartbeat',{eventId},now+10000);assert.equal(s.circle!.leases.b,now+10000);for(const id of s.circle!.participants)s.circle!.leases[id]=now+60000;assert.equal(fresh(s,now+59999).circle!.phase,'active');assert.equal(fresh(s,now+60000).circle!.phase,'finished');
 });
 test('leaving or a lost lease below four ends the circle, finished events cannot revive',()=>{
  let s=party();const eventId=s.circle!.id;s=act(s,'a','circle_start',{eventId});const stale=structuredClone(s);stale.circle!.leases.d=now-15000;assert.equal(fresh(stale).circle!.phase,'finished');s=act(s,'d','circle_leave',{eventId});assert.equal(s.circle!.phase,'finished');s.circle!.participants.push('d');s.circle!.leases.d=now;assert.equal(fresh(s).circle!.phase,'finished');
@@ -47,7 +47,25 @@ test('circle hand targets join exactly and every subframe gives bounded continuo
   const s=party(n),c=act(s,'a','circle_start',{eventId:s.circle!.id}).circle!;
   for(let at=0;at<60000;at+=250){for(let i=0;i<n;i++){
    const p=circlePose(c,people[i],c.startsAt!+at)!,next=circlePose(c,people[(i+1)%n],c.startsAt!+at)!,frame=circlePose(c,people[i],c.startsAt!+at+16)!;
-   assert.ok(p.right.every((v,j)=>Math.abs(v-next.left[j])<1e-10));assert.ok(walkable(p.x,p.z));assert.ok(Math.hypot(p.x-frame.x,p.z-frame.z)<.008);assert.ok(validMotion({...INITIAL_MOTION,userId:people[i],seq:1,sentAt:now,x:p.x,z:p.z,heading:p.yaw,zone:zoneAt(p.x,p.z),pose:'dancing'}));
+   assert.ok(p.right.every((v,j)=>Math.abs(v-next.left[j])<1e-10));assert.ok(walkable(p.x,p.z));assert.ok(Math.hypot(p.x-frame.x,p.z-frame.z)<.011);assert.ok(validMotion({...INITIAL_MOTION,userId:people[i],seq:1,sentAt:now,x:p.x,z:p.z,heading:p.yaw,zone:zoneAt(p.x,p.z),pose:'dancing'}));
   }}
  }
 });
+
+test('gathering assigns separate stable standing slots to one through eight guests',()=>{
+ const slots=new Map<string,{x:number;z:number;yaw:number}>();
+ for(let n=1;n<=8;n++){
+  const s=party(n),c=s.circle!;
+  for(const id of c.participants){
+   const p=circleWaitingPose(c,id)!;assert.ok(p);assert.ok(walkable(p.x,p.z));
+   assert.ok(RESOURCES.every(r=>Math.hypot(p.x-r.x,p.z-r.z)>.9));
+   if(slots.has(id))assert.deepEqual(p,slots.get(id));slots.set(id,p);
+   for(const other of c.participants.filter(peer=>peer!==id)){const q=circleWaitingPose(c,other)!;assert.ok(Math.hypot(p.x-q.x,p.z-q.z)>=1.19);}
+  }
+  assert.equal(circleWaitingPose(c,'outsider'),null);
+ }
+ const c=party().circle!;c.phase='finished';assert.equal(circleWaitingPose(c,'a'),null);
+ c.phase='countdown';c.startsAt=now+5000;assert.equal(circleWaitingPose(c,'a'),null);
+});
+
+test('circle completes a turn in about sixteen seconds',()=>{const s=party();const c=act(s,'a','circle_start',{eventId:s.circle!.id}).circle!;const a=circlePose(c,'a',now)!,b=circlePose(c,'a',now+Math.PI*2/.4*1000)!;assert.ok(Math.hypot(a.x-b.x,a.z-b.z)<1e-5);});

@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-18T14:17:43.356Z",
+  "build": "passed",
+  "unitTests": 29,
+  "databaseChecks": 49,
+  "browserScenarios": 2,
+  "finalStartRecheck": "passed",
+  "environment": "Chrome 157 SwiftShader, local production 3017/3018; independent BrowserContexts",
+  "graphics": {
+    "previousFloor": 0.55,
+    "autoFloor": 1,
+    "verifiedDesktopAuto": 1.75,
+    "verifiedLight": 0.85,
+    "verifiedDesktopSharp": 2,
+    "verifiedMobileViewportSharp": 1.75,
+    "sharpRetainedAfterSeconds": 14,
+    "preferenceSurvivesReload": true,
+    "adaptiveRecovery": "simulated unit checks"
+  },
+  "circle": {
+    "automaticStart": false,
+    "hostStart": "immediate",
+    "durationMs": 60000,
+    "angularSpeedRadiansPerSecond": 0.4,
+    "secondsPerRevolution": 15.707963267948966
+  },
+  "newMigration": {
+    "path": "supabase/migrations/202611180002_manual_circle.sql",
+    "sha256": "395e3035a4d5aa7a6244ab61ce3f95a3e84afc026f53734008eedfa6af061a4f"
+  },
+  "notVerified": [
+    "Physical mobile GPU",
+    "Live Vercel/Supabase deployment"
+  ]
+}

@@ -62,7 +62,7 @@ export function applySocialAction(social:Social,actor:string,action:SocialAction
   const c=event();if(c.phase!=='recruiting')fail('EVENT_ACTIVE');if(!c.participants.includes(actor)){if(c.participants.length>=8)fail('EVENT_FULL');release();c.participants.push(actor);}c.leases[actor]=now;
  }else if(action==='circle_start'){
   const c=event();if(c.hostId!==actor)fail('EVENT_HOST_ONLY');if(c.phase!=='recruiting')fail('EVENT_ACTIVE');if(c.participants.length<4)fail('EVENT_NOT_READY');if(!fireLit)fail('FIRE_NOT_LIT');
-  for(const id of c.participants)c.leases[id]=now;c.startsAt=now+5000;c.endsAt=c.startsAt+60000;c.phase='countdown';
+  for(const id of c.participants)c.leases[id]=now;c.startsAt=now;c.endsAt=now+60000;c.phase='active';
  }else if(action==='circle_leave'){
   const c=event();c.participants=c.participants.filter(id=>id!==actor);delete c.leases[actor];if(c.hostId===actor)c.hostId=c.participants[0]??actor;if(!c.participants.length||(c.startsAt!==null&&c.participants.length<4))c.phase='finished';
  }else if(action==='circle_heartbeat'){
@@ -72,9 +72,16 @@ export function applySocialAction(social:Social,actor:string,action:SocialAction
 }
 export function foodStage(food:Food,now:number){return now-food.placedAt>=60000?'overdone':now-food.placedAt>=30000&&food.flippedAt!==null?'ready':'cooking';}
 export function ownResource(social:Social|undefined,id:string){const pair=Object.entries(social?.occupancies??{}).find(([,o])=>o.userId===id);return pair?RESOURCES.find(r=>r.id===pair[0])??null:null;}
+// Fixed gathering slots do not shift when another guest joins the queue.
+export function circleWaitingPose(c:Circle,userId:string):{x:number;z:number;yaw:number}|null{
+ if(c.phase!=='recruiting'||c.startsAt!==null)return null;
+ const i=c.participants.indexOf(userId);if(i<0||i>=8)return null;
+ const x=[0,1.2,-1.2,2.4,-2.4,3.6,-3.6,4.8][i],z=7.6;
+ return{x,z,yaw:Math.atan2(x,z-1.5)};
+}
 export function circlePose(c:Circle,userId:string,now:number):{x:number;z:number;yaw:number;left:[number,number,number];right:[number,number,number]}|null{
  const i=c.participants.indexOf(userId),n=c.participants.length;if(i<0||n<4||c.startsAt===null)return null;
- const radius=Math.max(.86,1.14/(2*Math.sin(Math.PI/n))),phase=now<c.startsAt?0:(Math.min(now,c.endsAt??now)-c.startsAt)/1000*.22;
+ const radius=Math.max(.86,1.14/(2*Math.sin(Math.PI/n))),phase=now<c.startsAt?0:(Math.min(now,c.endsAt??now)-c.startsAt)/1000*.4;
  const angle=2*Math.PI*i/n+phase;
  const pos=(a:number):[number,number,number]=>[Math.sin(a)*radius,.62,1.5+Math.cos(a)*radius];
  const here=pos(angle),before=pos(angle-2*Math.PI/n),after=pos(angle+2*Math.PI/n);

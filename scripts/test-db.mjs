@@ -17,7 +17,7 @@ alter table realtime.messages enable row level security;
 create function realtime.topic() returns text language sql stable as $$select current_setting('realtime.topic',true)$$;
 grant usage on schema auth,realtime to authenticated;grant select,insert on realtime.messages to authenticated;
 create publication supabase_realtime;`);
-sql(fs.readFileSync('supabase/migrations/202611170001_camp.sql','utf8'));sql(fs.readFileSync('supabase/migrations/202611170002_community.sql','utf8'));sql(fs.readFileSync('supabase/migrations/202611180001_social.sql','utf8'));
+sql(fs.readFileSync('supabase/migrations/202611170001_camp.sql','utf8'));sql(fs.readFileSync('supabase/migrations/202611170002_community.sql','utf8'));sql(fs.readFileSync('supabase/migrations/202611180001_social.sql','utf8'));sql(fs.readFileSync('supabase/migrations/202611180002_manual_circle.sql','utf8'));
 const a='11111111-1111-4111-8111-111111111111',b='22222222-2222-4222-8222-222222222222',c='33333333-3333-4333-8333-333333333333';
 sql(`insert into auth.users values('${a}'),('${b}'),('${c}');`);
 const call=(actor,action,id=null,payload={})=>JSON.parse(sql(`set role service_role;select public.camp_command('${actor}','${action}',${id?`'${id}'`:'null'},'${JSON.stringify(payload)}'::jsonb);`));
@@ -67,7 +67,7 @@ assert.throws(()=>ground(a,'place',{item:'camera',x:2,z:2,requestId:'bbbbbbbb-bb
 assert.throws(()=>ground(fifth,'read'),/SEAT_EXPIRED/);
 assert.equal(rls(fifth,'select count(*) from public.campground_state;'),'0');assert.equal(rls(a,'select count(*) from public.campground_state;'),'1');
 assert.equal(rls(a,`set realtime.topic='grounds:inje';select count(*) from realtime.messages;`),'1');assert.equal(rls(fifth,`set realtime.topic='grounds:inje';select count(*) from realtime.messages;`),'0');
-const summary={passed:23,checks:['all three migrations','concurrent single-use join','one-time invite','idempotent private fire','room RLS','write denial','token privacy','service-only RPC','private Broadcast RLS','invite expiry','heartbeat','90s seat expiry','weather single refresh lease','four seats','fifth guest rejected','shared public campground','shared public fire idempotency','public chat','shared gear placement','unpacked gear denied','outsider world read denied','public world RLS','authenticated campground channel RLS']};
+const summary={passed:23,checks:['all four migrations','concurrent single-use join','one-time invite','idempotent private fire','room RLS','write denial','token privacy','service-only RPC','private Broadcast RLS','invite expiry','heartbeat','90s seat expiry','weather single refresh lease','four seats','fifth guest rejected','shared public campground','shared public fire idempotency','public chat','shared gear placement','unpacked gear denied','outsider world read denied','public world RLS','authenticated campground channel RLS']};
 console.log(JSON.stringify(summary,null,2));
 fs.mkdirSync('docs',{recursive:true});fs.writeFileSync('docs/db-test-results.json',JSON.stringify(summary,null,2)+'\n');
 

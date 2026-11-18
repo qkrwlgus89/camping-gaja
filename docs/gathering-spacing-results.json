@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-18T14:01:51.630Z",
+  "build": "passed",
+  "unitPassed": 25,
+  "browserPassed": 1,
+  "waitingSpacingMetres": 1.2,
+  "checks": [
+    "1–8 fixed separated slots",
+    "four independent sessions before countdown",
+    "waiting reconnect restores own slot",
+    "countdown, active circle and exit"
+  ],
+  "environment": "Local Next production 3016, Chrome SwiftShader; host WebGL and three isolated still contexts"
+}
