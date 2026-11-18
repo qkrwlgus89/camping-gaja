@@ -74,11 +74,11 @@ export function foodStage(food:Food,now:number){return now-food.placedAt>=60000?
 export function ownResource(social:Social|undefined,id:string){const pair=Object.entries(social?.occupancies??{}).find(([,o])=>o.userId===id);return pair?RESOURCES.find(r=>r.id===pair[0])??null:null;}
 export function circlePose(c:Circle,userId:string,now:number):{x:number;z:number;yaw:number;left:[number,number,number];right:[number,number,number]}|null{
  const i=c.participants.indexOf(userId),n=c.participants.length;if(i<0||n<4||c.startsAt===null)return null;
- const radius=Math.max(1.05,1.5/(2*Math.sin(Math.PI/n))),phase=now<c.startsAt?0:(Math.min(now,c.endsAt??now)-c.startsAt)/1000*.22;
+ const radius=Math.max(.86,1.14/(2*Math.sin(Math.PI/n))),phase=now<c.startsAt?0:(Math.min(now,c.endsAt??now)-c.startsAt)/1000*.22;
  const angle=2*Math.PI*i/n+phase;
- const pos=(a:number):[number,number,number]=>[Math.sin(a)*radius,.65,1.5+Math.cos(a)*radius];
+ const pos=(a:number):[number,number,number]=>[Math.sin(a)*radius,.62,1.5+Math.cos(a)*radius];
  const here=pos(angle),before=pos(angle-2*Math.PI/n),after=pos(angle+2*Math.PI/n);
- const midpoint=(p:number[],q:number[]):[number,number,number]=>[(p[0]+q[0])/2,.65,(p[2]+q[2])/2];
+ const midpoint=(p:number[],q:number[]):[number,number,number]=>[(p[0]+q[0])/2,.62,(p[2]+q[2])/2];
  return{x:here[0],z:here[2],yaw:Math.atan2(Math.sin(angle),Math.cos(angle)),left:midpoint(here,before),right:midpoint(here,after)};
 }
 export function resourceMotion(m:Motion,r:Resource):Motion{return{...m,x:r.x,z:r.z,zone:zoneAt(r.x,r.z),yaw:r.yaw,heading:r.yaw,pose:r.kind==='hammock'?'reclining':'sitting',resourceId:r.id,inside:false};}

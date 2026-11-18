@@ -21,7 +21,7 @@ type Props = {
 };
 // All authored pieces use the same local units as the retained Kenney animation skeleton.
 const SCALE = AVATAR_HEIGHT / .665;
-const UPPER_LEG = .082, LOWER_LEG = .067, UPPER_ARM = .15, LOWER_ARM = .16;
+const UPPER_LEG = .082, LOWER_LEG = .067, UPPER_ARM = .12, LOWER_ARM = .115;
 const DOWN = new T.Vector3(0, -1, 0), UP = new T.Vector3(0, 1, 0);
 
 type Arm = {upper: T.Group; elbow: T.Group; wrist: T.Group; upperBone: T.Object3D};
@@ -59,13 +59,14 @@ function createCamper(source: T.Group, appearance: AvatarAppearance) {
   // A soft hood and short collar replace the square elderly silhouette.
   oval(torso, [0, .135, -.038], [.075, .035, .045], coat);
   oval(torso, [0, .163, .004], [.027, .032, .027], skin);
-  rounded(head, [.25, .26, .225], [0, .14, 0], skin, .058);
+  // A smooth oval silhouette, including the cheeks and chin.
+  oval(head, [0, .143, 0], [.133, .14, .119], skin, 32);
   for (const side of [-1, 1]) {
     oval(head, [side * .129, .135, -.002], [.018, .026, .018], skin);
     oval(head, [side * .052, .148, .112], [.023, .029, .012], white);
     oval(head, [side * .052, .145, .123], [.012, .021, .008], iris);
     oval(head, [side * .052 - .004, .153, .13], [.004, .005, .003], white, 12);
-    oval(head, [side * .075, .105, .113], [.024, .01, .003], cheek, 14);
+    oval(head, [side * .075, .105, .101], [.024, .01, .003], cheek, 14);
     tube(head, [[side * .077, .19, .108], [side * .052, .194, .116], [side * .03, .189, .112]], .003, hair);
   }
   oval(head, [0, .121, .119], [.007, .009, .011], skin, 14);
@@ -96,13 +97,12 @@ function createCamper(source: T.Group, appearance: AvatarAppearance) {
       break;
     case 'pony':
       fringe(-1);lock([0, .212, -.145], [.044, .071, .041], .1);lock([.012, .147, -.16], [.046, .076, .044], -.15);
-      oval(head, [0, .249, -.127], [.045, .014, .038], accent);break;
+      break;
     case 'half-up':
       fringe(1);for (const side of [-1, 1]) lock([side * .12, .179, -.015], [.035, .071, .068]);
-      lock([0, .276, -.105], [.047, .041, .047]);oval(head, [0, .258, -.111], [.045, .009, .043], accent);break;
+      lock([0, .276, -.085], [.047, .027, .037]);break;
     case 'bun':
-      fringe(-1);lock([0, .257, -.139], [.052, .045, .049]);
-      mesh(head, new T.TorusGeometry(.04, .006, 6, 24), accent, [0, .257, -.177]);break;
+      fringe(-1);lock([0, .302, -.046], [.053, .031, .043]);break;
   }
   const knees: T.Group[] = [];
   for (const side of ['left', 'right']) {
@@ -117,6 +117,7 @@ function createCamper(source: T.Group, appearance: AvatarAppearance) {
   const arms: Arm[] = [];
   for (const side of ['left', 'right']) {
     const upperBone = scene.getObjectByName(`arm-${side}`)!;
+    upperBone.position.y += .06;
     const upper = new T.Group();upper.name = `avatar-upper-arm-${side}`;upperBone.add(upper);
     rounded(upper, [.054, UPPER_ARM + .017, .057], [0, -UPPER_ARM / 2, 0], coat, .019);
     const elbow = new T.Group();elbow.name = `avatar-elbow-${side}`;elbow.position.y = -UPPER_ARM;upper.add(elbow);
@@ -214,7 +215,9 @@ export function CamperAvatar({motion, self = false, lying = false, wave = false,
     }
     for (let i = 0; i < rig.arms.length; i++) {
       const arm = rig.arms[i];arm.upper.quaternion.identity();
-      arm.elbow.rotation.set(reclining ? .05 : seated ? -1.2 : -1.35, 0, 0);
+      const swing = pose === 'walking' ? Math.sin(elapsed.current * 7 + i * Math.PI) * .22 : 0;
+      arm.upperBone.rotation.set(reclining ? -.03 : seated ? -.75 : swing, 0, i ? -.055 : .055);
+      arm.elbow.rotation.set(.025, 0, 0);
       if (reclining) arm.upperBone.rotation.set(-.03, 0, i ? -.12 : .12);
       if (wave && i === 1 && !hands) {arm.upperBone.rotation.set(-2.2, 0, -.15 + Math.sin(elapsed.current * 7) * .2);arm.elbow.rotation.x = -.55;}
     }
@@ -241,20 +244,6 @@ export function CamperAvatar({motion, self = false, lying = false, wave = false,
     }
     if (!hands && reclining) {
       for (let i = 0; i < rig.arms.length; i++) {const side = i === 0 ? 1 : -1;scratch.target.set(side * .044, .04, .077);rig.torso.localToWorld(scratch.target);reach(rig.arms[i], scratch.target, 0, SCALE, new T.Vector3(side * .8, -.35, .1));}
-      root.current.updateWorldMatrix(true, true);
-    }
-    if (!hands && !reclining) {
-      rig.seatContact.getWorldPosition(scratch.world);
-      for (let i = 0; i < rig.arms.length; i++) {
-        if ((wave || eating) && i === 1) continue;
-        const side = i === 0 ? 1 : -1;
-        if (seated) scratch.target.set(side * .30, .235, .09).applyQuaternion(root.current.quaternion).add(scratch.world);
-        else {
-          const swing = pose === 'walking' ? Math.sin(elapsed.current * 7 + i * Math.PI) * .04 : 0;
-          scratch.target.set(side * .116, -.018, .035 + swing);rig.torso.localToWorld(scratch.target);
-        }
-        reach(rig.arms[i], scratch.target, -3, SCALE);
-      }
       root.current.updateWorldMatrix(true, true);
     }
     if (eating && !hands) {

@@ -97,7 +97,7 @@ git push origin version_1.0
 
 Git 연동 Vercel은 브랜치 설정에 따라 배포합니다. `version_1.0`이 Production Branch이면 운영에, 다른 브랜치이면 Preview에 반영됩니다. 별도 Preview 브랜치로 보려면 마지막 push 대신 `git switch -c release/v1.2.0` 다음 `git push -u origin release/v1.2.0`을 실행하세요. 빌드 성공 여부는 Vercel Deployments에서 확인합니다.
 
-브랜치별 배포 동작은 [Vercel 공식 Git 안내](https://vercel.com/docs/git)를 참고하세요. 얼굴 둥글게 다듬기·뒷머리 장식 제거·팔 짧게 펴기는 사용자의 요청으로 다음 작업에 남겼습니다.
+브랜치별 배포 동작은 [Vercel 공식 Git 안내](https://vercel.com/docs/git)를 참고하세요. 아바타 후속 수정으로 둥근 얼굴, 뒷머리 고리 제거, 짧고 곧게 내린 팔을 반영했습니다. 손잡기 간격도 새 팔 길이에 맞췄습니다.
 
 Vercel에 Next.js 프로젝트를 연결하고 Preview 환경에 위 Supabase·KMA 값을 먼저 설정합니다. Install `npm ci`, Build `npm run build`, Output 기본값, Node 24.x. 새 Preview는 기존 Production URL을 변경하지 않습니다.
 

@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-11-18T13:47:53.194Z",
+  "environment": "Chrome SwiftShader, local Next production on 3013",
+  "passed": 3,
+  "unitPassed": 24,
+  "typecheck": "passed",
+  "build": "passed",
+  "tests": [
+    {
+      "name": "packing, third person, continuous walking, vertical look, stars and moon, skewer axis and animated fire",
+      "status": "passed"
+    },
+    {
+      "name": "mobile portrait WebGL facility touch, sky drag and barbecue scrolling",
+      "status": "passed"
+    },
+    {
+      "name": "four independent URL visitors opt in, hold hands continuously and leave a campfire circle",
+      "status": "passed"
+    }
+  ],
+  "limitations": [
+    "Physical mobile device",
+    "Live Vercel deployment"
+  ]
+}

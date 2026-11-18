@@ -11,7 +11,7 @@ export type AvatarAppearance = {
   shoes: string;
 };
 export const AVATAR_HEIGHT = 1.38;
-export const AVATAR_HAND_SPAN = 1.76;
+export const AVATAR_HAND_SPAN = 1.36;
 const HAIR_STYLES: HairStyle[] = ['crop', 'part', 'waves', 'bob', 'curly', 'pony', 'half-up', 'bun'];
 const SKIN = ['#eac0a2', '#d5a181', '#bb896d', '#98674e', '#754d3e', '#efccb5'];
 const HAIR = ['#352b27', '#5c3d2d', '#814e36', '#372a29', '#8e6445', '#262b30'];
